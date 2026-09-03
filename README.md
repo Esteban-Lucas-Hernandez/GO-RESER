@@ -34,4 +34,4 @@ PENDING: Reserva temporal iniciada.CONFIRMED: Pago o garantía recibida.CHECKED_
 Facturación finalizada y habitación lista para limpieza.
 
 
-Configuración del ProyectoRequisitosJava Development Kit (JDK) 21.Node.js (LTS).PostgreSQL 15+.
+Configuración del ProyectoRequisitosJava Development Kit (JDK) 21.Node.js (LTS).PostgreSQL 15+..
