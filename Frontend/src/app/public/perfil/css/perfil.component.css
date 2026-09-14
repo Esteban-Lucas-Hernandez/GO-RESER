@@ -1,0 +1,852 @@
+/* =========================================
+   ESTILOS GENERALES Y RESET
+   ========================================= */
+:host {
+  display: block;
+  width: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* Asegura que el padding no aumente el ancho total */
+}
+
+body {
+  font-family: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f0f9ff;
+  /* Fondo azul muy claro como base */
+  color: #334155;
+  /* Color de texto gris oscuro (Slate 700) para buena lectura */
+  line-height: 1.5;
+  /* Altura de línea para mejorar legibilidad */
+  -webkit-font-smoothing: antialiased;
+  /* Suavizado de fuentes en WebKit */
+}
+
+/* =========================================
+   LAYOUT PRINCIPAL DE LA PÁGINA
+   ========================================= */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Ocupa al menos toda la altura de la pantalla */
+  background: #ffffff;
+  /* Fondo blanco sólido */
+}
+
+/* =========================================
+   ESTILOS DEL ENCABEZADO (HEADER)
+   ========================================= */
+header {
+  background: rgba(255, 255, 255, 0.9);
+  /* Fondo blanco semitransparente */
+  backdrop-filter: blur(10px);
+  /* Efecto de desenfoque tipo cristal (frosted glass) */
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  /* Borde inferior sutil */
+  position: fixed;
+  /* FIJO: Se mantiene visible al hacer scroll */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  /* Asegura que esté por encima de todo el contenido */
+  width: 100%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  /* Sombra muy suave */
+}
+
+.page-container {
+  padding-top: 3.5rem;
+  /* ESPACIO PARA EL HEADER FIJO (Debe coincidir con la altura del header) */
+}
+
+.header-container {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 1rem;
+  /* Padding base para móviles */
+  width: 100%;
+}
+
+/* Contenedor flexible para alinear logo y navegación */
+.header-content {
+  height: 3.5rem;
+  /* ALTURA REDUCIDA DEL HEADER (Antes 4.5rem) */
+  display: flex;
+  align-items: center;
+  /* Centra verticalmente los elementos */
+  justify-content: space-between;
+  /* Separa logo a la izq y nav a la der */
+}
+
+/* Sección del logo */
+.header-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+}
+
+.logo-wrapper img {
+  height: 35px;
+  /* Altura del logo ajustada un poco más pequeña */
+  width: auto;
+  display: block;
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* =========================================
+   NAVEGACIÓN
+   ========================================= */
+.header-nav-container {
+  display: flex;
+  align-items: center;
+}
+
+.main-nav {
+  display: flex;
+}
+
+/* Enlace de navegación (Botón 'Volver') */
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Espacio entre icono y texto */
+  padding: 0.5rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+  /* Gris medio */
+  text-decoration: none;
+  border-radius: 9999px;
+  /* Bordes totalmente redondeados (tipo píldora) */
+  transition: all 0.2s ease;
+  /* Transición suave al pasar el mouse */
+}
+
+.nav-link:hover {
+  color: #0ea5e9;
+  /* Azul brillante al pasar el mouse */
+  background-color: #f0f9ff;
+  /* Fondo azul muy claro al pasar el mouse */
+}
+
+.nav-link-active {
+  color: #0284c7;
+  /* Azul más oscuro para indicar activo */
+  background-color: #e0f2fe;
+  /* Fondo azul claro seleccionado */
+}
+
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  padding: 1.5rem 1rem; /* Padding base para móviles */
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Nuevo contenedor de cuadrícula para el perfil */
+.profile-grid-container{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+@media (min-width: 992px){
+  .profile-grid-container{
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      "details image";
+  }
+}
+
+/* Escritorio a partir de 992px: dos columnas */
+@media (min-width: 992px) {
+  .profile-grid-container {
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas: "details image";
+    gap: 1.75rem;
+  }
+}
+
+.profile-details-container {
+  grid-area: details;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.profile-image-container {
+  grid-area: image;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+@media (max-width: 991px) {
+  .profile-image-container {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* Ajustes para la tarjeta de la imagen de perfil */
+.profile-image-container .profile-card {
+  width: 100%; /* Ocupa todo el ancho del contenedor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-image-container .profile-avatar {
+  width: 9rem;
+  height: 9rem;
+  border-width: 5px;
+  min-width: 9rem;
+  min-height: 9rem;
+}
+
+@media (min-width: 640px) {
+  .profile-image-container .profile-avatar {
+    width: 10rem;
+    height: 10rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .profile-image-container .profile-avatar {
+    width: 12rem;
+    height: 12rem;
+  }
+}
+
+/* Cards */
+.card {
+  background: #ffffff;
+  border-radius: 1rem;
+  /* Rounded corners */
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+  overflow: hidden;
+  width: 100%;
+}
+
+.profile-card {
+  background: #ffffff;
+  /* Keep it white for consistency, or subtle gradient */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  /* Asegura que la tarjeta tenga algo de espacio interno */
+}
+
+/* Profile Header Specifics */
+.profile-header-content {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .profile-header-content {
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .profile-header-content {
+    flex-direction: row;
+    text-align: left;
+    padding: 2.5rem 3rem;
+  }
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .profile-info {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+.profile-avatar {
+  width: 7rem;
+  height: 7rem;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background-size: cover;
+  background-position: center;
+  background-color: #e2e8f0;
+  /* Fallback color */
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .user-name {
+    font-size: 1.75rem;
+  }
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .user-email {
+    font-size: 1rem;
+  }
+}
+
+/* Card Sections */
+.card-header {
+  padding: 1.1rem 1.3rem;
+  border-bottom: 1px solid #f1f5f9;
+  background-color: #ffffff;
+}
+
+@media (min-width: 992px) {
+  .card-header {
+    padding: 1.5rem 2rem;
+  }
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 1.125rem;
+  }
+}
+
+/* Forms */
+.personal-form,
+.password-form {
+  padding: 1.35rem;
+}
+
+@media (min-width: 992px) {
+  .personal-form,
+  .password-form {
+    padding: 2rem;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.1rem;
+  margin-bottom: 1.3rem;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 992px) {
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+.form-label-wrapper,
+.input-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.65rem;
+}
+
+@media (min-width: 768px) {
+  .form-label-wrapper,
+  .input-label {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+  /* Para posicionar los botones de acción */
+}
+
+/* Contenedor de botones Aceptar/Cancelar - Posicionado como overlay */
+.action-buttons {
+  position: absolute;
+  right: 0.5rem;
+  /* Alineado a la derecha dentro del input */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 0.25rem;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.95) 30%);
+  /* Gradiente para no tapar el texto */
+  padding-left: 1.5rem;
+  z-index: 10;
+}
+
+@media (max-width: 639px) {
+  .action-buttons {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    margin-top: 0.5rem;
+    justify-content: flex-start;
+    background: transparent;
+    padding-left: 0;
+  }
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+.form-input.readonly-input {
+  background-color: #f8fafc;
+  color: #555;
+  border-color: #e2e8f0;
+}
+
+/* Icons / Buttons */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-icon:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.btn-icon.text-success {
+  color: #10b981;
+}
+
+.btn-icon.text-success:hover {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.btn-icon.text-danger {
+  color: #ef4444;
+}
+
+.btn-icon.text-danger:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Botones más pequeños dentro del overlay de acción */
+.action-buttons .btn-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+}
+
+.action-buttons .btn-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.card-footer {
+  padding: 1.2rem 1.5rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 639px) {
+  .card-footer {
+    justify-content: center;
+  }
+  .btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #0ea5e9;
+  /* Sky 500 */
+  color: white;
+  box-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
+}
+
+.btn-primary:hover {
+  background-color: #0284c7;
+  /* Sky 600 */
+  box-shadow: 0 4px 6px rgba(14, 165, 233, 0.4);
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  background-color: #e0f2fe;
+  color: #0284c7;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 9999px;
+}
+
+/* Loading / Error */
+.loading,
+.error,
+.no-data {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  word-wrap: break-word;
+  /* Ensure long words break */
+  overflow-wrap: break-word;
+  /* Modern property */
+  max-width: 100%;
+  /* Ensure it doesn't exceed parent */
+  box-sizing: border-box;
+}
+
+.error p,
+.no-data p {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+  /* Ensure wrapping */
+}
+
+.btn-reintentar {
+  margin-top: 1rem;
+  background-color: #0ea5e9;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================================
+   RESPONSIVIDAD (MEDIA QUERIES)
+   ========================================= */
+
+/* Tablet Portrait (min-width: 640px) */
+@media (min-width: 640px) {
+  .main-content {
+    padding: 2.5rem 2rem;
+    /* Padding intermedio para tablets */
+  }
+
+  .header-container {
+    padding: 0 2rem;
+    /* Margen intermedio en header */
+  }
+
+  .profile-header-content {
+    flex-direction: row;
+    /* Cambia a fila (lado a lado) en pantallas más grandes */
+    text-align: left;
+    padding: 2.5rem 3rem;
+  }
+
+  .profile-info {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+/* Móvil (max-width: 639px) */
+@media (max-width: 639px) {
+  .header-content {
+    height: 3.5rem;
+    /* Ajuste de altura en móvil (igual al desktop por ahora) */
+  }
+
+  .page-container {
+    padding-top: 3.5rem;
+    /* Ajuste del padding para coincidir con el header */
+  }
+
+  .header-logo {
+    gap: 0.5rem;
+  }
+
+  .logo-wrapper img {
+    height: 30px;
+    /* Logo un poco más pequeño en móvil */
+  }
+
+  .header-title {
+    font-size: 1.1rem;
+  }
+
+  .personal-form,
+  .password-form {
+    padding: 1.5rem;
+    /* Menos padding en formularios móviles */
+  }
+
+  .card-footer {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+/* =========================================
+   UTILIDADES
+   ========================================= */
+@media (max-width: 639px) {
+  header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .header-content {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    gap: 0.4rem;
+  }
+
+  .main-content {
+    padding: 1rem 0.75rem;
+    margin-top: 3.8rem;
+  }
+
+  .header-container {
+    padding: 0 0.75rem;
+  }
+
+  .header-logo img {
+    height: 26px;
+  }
+
+  .nav-link {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 991px) {
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .main-content {
+    width: 100%;
+    padding: 1rem 0.75rem;
+  }
+
+  .content-wrapper {
+    gap: 1rem;
+  }
+
+  .profile-grid-container{
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      "details image";
+  }
+
+  .profile-details-container,
+  .profile-image-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .profile-image-container {
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .profile-card {
+    padding: 1.5rem;
+  }
+
+  .profile-avatar,
+  .profile-image-container .profile-avatar {
+    width: 9rem !important;
+    height: 9rem !important;
+  }
+
+  .card {
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.08);
+  }
+
+  .personal-form,
+  .password-form {
+    padding: 1.2rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .form-label-wrapper {
+    width: 100%;
+  }
+
+  .input-group {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .action-buttons {
+    position: relative !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    margin-top: 0.5rem;
+    background: transparent !important;
+    padding-left: 0 !important;
+    justify-content: flex-start !important;
+    width: 100%;
+  }
+
+  .action-buttons .btn-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .card-footer {
+    justify-content: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.text-text-light-secondary {
+  color: #94a3b8;
+  /* Texto gris muy claro */
+  font-size: 0.875rem;
+}
+.profile-details-container{
+  grid-area: details;
+}
+
+.profile-image-container{
+  grid-area: image;
+}

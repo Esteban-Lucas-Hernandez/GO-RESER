@@ -1,0 +1,73 @@
+<section class="newsletter-section">
+  <div class="container">
+    <div class="newsletter-content">
+      <div class="newsletter-text">
+        <h2 class="newsletter-title">Suscríbete a nuestra newsletter</h2>
+        <p class="newsletter-description">
+          Recibe las mejores ofertas de hoteles, consejos de viaje y noticias exclusivas directamente en tu bandeja de entrada.
+        </p>
+        <div class="newsletter-benefits">
+          <div class="benefit-item">
+            <span class="benefit-icon">🏨</span>
+            <span class="benefit-text">Ofertas exclusivas de hoteles</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">✈️</span>
+            <span class="benefit-text">Consejos de viaje expertos</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">🎯</span>
+            <span class="benefit-text">Destinos recomendados</span>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">💰</span>
+            <span class="benefit-text">Descuentos especiales</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="newsletter-form-container">
+        <form class="newsletter-form" (ngSubmit)="subscribeToNewsletter()">
+          <div class="form-group">
+            <input 
+              type="email" 
+              class="newsletter-input" 
+              placeholder="Ingresa tu email"
+              [(ngModel)]="email"
+              name="email"
+              required
+              [disabled]="isLoading || isSubscribed"
+            />
+            <button 
+              type="submit" 
+              class="newsletter-button"
+              [disabled]="isLoading || isSubscribed"
+              [class.loading]="isLoading"
+              [class.success]="isSubscribed"
+            >
+              <span *ngIf="!isLoading && !isSubscribed">Suscribirse</span>
+              <span *ngIf="isLoading">Procesando...</span>
+              <span *ngIf="isSubscribed">¡Suscrito!</span>
+            </button>
+          </div>
+          <p class="privacy-text">
+            Al suscribirte, aceptas nuestra 
+            <a href="#" class="privacy-link">política de privacidad</a>.
+            Puedes darte de baja en cualquier momento.
+          </p>
+        </form>
+        
+        <div class="social-proof">
+          <div class="subscriber-count">
+            <span class="count-number">50,000+</span>
+            <span class="count-label">viajeros suscritos</span>
+          </div>
+          <div class="rating">
+            <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+            <span class="rating-text">4.9/5 valoración</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

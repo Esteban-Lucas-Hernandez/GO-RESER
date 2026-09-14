@@ -1,0 +1,75 @@
+<section class="hero">
+  <div class="hero-container">
+    <div class="hero-text">
+      <span>Reservas de Hoteles</span>
+      <h1>Bienvenido a <br><span class="go-reser" id="goReser"></span></h1>
+      <p>
+        Descubre y reserva los mejores hoteles en tu destino favorito. Encuentra habitaciones perfectas para tu próxima aventura con los precios más competitivos del mercado.
+      </p>
+      
+      <!-- Search Filter - Added before the button -->
+      <div class="search-filter-container" #searchContainer>
+        <div class="search-box">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+            (focus)="showDropdown = true"
+            (blur)="hideDropdownWithDelay()"
+            placeholder="Buscar hoteles por nombre, ciudad o departamento..."
+            class="search-input"
+            #searchInput
+          />
+          <div class="search-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <button (click)="goToHoteles()" class="explore-button">Explorar Hoteles</button>
+    </div>
+    <div class="hero-image">
+      <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/d3/63/3e/hotel-krystal-cancun.jpg?w=1200&h=700&s=1" alt="Hero Background">
+      <div class="hero-badge">
+        🏆 Premium hotel
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dropdown with filtered hotels - positioned in the body -->
+<div
+  class="dropdown-container-global"
+  *ngIf="showDropdown && filteredHoteles.length > 0 && searchTerm.trim()"
+  [style.top.px]="dropdownPositionTop"
+  [style.left.px]="dropdownPositionLeft"
+  [style.width.px]="dropdownWidth"
+>
+  <ul class="dropdown-list">
+    <li
+      *ngFor="let hotel of filteredHoteles"
+      class="dropdown-item"
+      (mousedown)="selectHotel(hotel)"
+    >
+      <div class="hotel-info-dropdown">
+        <div class="hotel-name">{{ hotel.nombre }}</div>
+        <div class="hotel-location">
+          {{ hotel.direccion }}, {{ getCiudadNombre(hotel) }}, {{ getDepartamentoNombre(hotel) }}
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,200 @@
+.reservas-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.reservas-container h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.filtro-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+
+.filtro-container label {
+  font-weight: bold;
+  color: #555;
+}
+
+.filtro-container .form-control {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filtro-container .btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.filtro-container .btn-secondary {
+  background: linear-gradient(135deg, #00bfff, #0080ff);
+  color: white;
+}
+
+.filtro-container .btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #00bfff, #00509f);
+}
+
+/* Estilos para el botón de generar PDF */
+.filtro-container .btn-pdf-hotel {
+  background-color: #28a745;
+  color: white;
+}
+
+.filtro-container .btn-pdf-hotel:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+/* Estilos para el botón de eliminar reservas canceladas y antiguas */
+.filtro-container .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.filtro-container .btn-danger:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.filtro-container .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.tabla-container {
+  flex: 1;
+  overflow: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-reservas {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-reservas th {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  border-right: 1px solid #e0e0e0;
+}
+
+.tabla-reservas th:last-child {
+  border-right: none;
+}
+
+.tabla-reservas td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #e0e0e0;
+}
+
+.tabla-reservas td:last-child {
+  border-right: none;
+}
+
+.tabla-reservas tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.tabla-reservas tr:last-child td {
+  border-bottom: none;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+.actions-cell {
+  white-space: nowrap;
+  width: 100px;
+  text-align: center;
+}
+
+/* Estilos para el botón PDF */
+.btn-pdf {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.btn-pdf:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .reservas-container {
+    padding: 10px;
+  }
+
+  .filtro-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-container > * {
+    margin-bottom: 10px;
+  }
+
+  .tabla-reservas {
+    font-size: 12px;
+  }
+
+  .tabla-reservas th,
+  .tabla-reservas td {
+    padding: 8px 6px;
+  }
+
+  .btn-pdf {
+    padding: 6px;
+    font-size: 14px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .actions-cell {
+    width: 80px;
+  }
+}

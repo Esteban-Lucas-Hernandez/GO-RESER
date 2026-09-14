@@ -1,0 +1,110 @@
+<div class="hoteles-container">
+  <h2>Listado de Hoteles</h2>
+  <p>Aquí puedes administrar los hoteles del sistema.</p>
+
+  <div class="tabla-container">
+    <table class="tabla-hoteles">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Contacto</th>
+          <th>Ubicación</th>
+          <th>Detalles</th>
+          <th>Imagen</th>
+          <th class="actions-cell">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let hotel of hoteles">
+          <td data-label="ID">{{ hotel.id }}</td>
+          <td data-label="Nombre">
+            <strong>{{ hotel.nombre }}</strong>
+          </td>
+          <td data-label="Contacto">
+            <div class="contact-info">
+              <div><fa-icon [icon]="faPhone"></fa-icon> {{ hotel.telefono }}</div>
+              <div>
+                <fa-icon [icon]="faEnvelope"></fa-icon> {{ hotel.email || 'No especificado' }}
+              </div>
+            </div>
+          </td>
+          <td data-label="Ubicación">
+            <div class="location-info">
+              <div><fa-icon [icon]="faMapMarkerAlt"></fa-icon> {{ hotel.direccion }}</div>
+              <div><fa-icon [icon]="faCity"></fa-icon> {{ hotel.ciudadNombre }}</div>
+            </div>
+          </td>
+          <td data-label="Detalles">
+            <div class="details-info">
+              <div><fa-icon [icon]="faStar"></fa-icon> {{ hotel.estrellas }} estrellas</div>
+              <div class="description">
+                {{ hotel.descripcion | slice : 0 : 50
+                }}{{ hotel.descripcion.length > 50 ? '...' : '' }}
+              </div>
+            </div>
+          </td>
+          <td data-label="Imagen">
+            <div class="image-cell">
+              <img
+                *ngIf="hotel.imagenUrl"
+                [src]="hotel.imagenUrl"
+                alt="Imagen del hotel"
+                class="hotel-image"
+              />
+              <div *ngIf="!hotel.imagenUrl" class="no-image">
+                <fa-icon [icon]="faImage"></fa-icon>
+              </div>
+            </div>
+          </td>
+          <td class="actions-cell">
+            <button class="btn-edit" (click)="editarHotel(hotel)" title="Editar">
+              <fa-icon [icon]="faEdit"></fa-icon>
+            </button>
+            <button
+              class="btn-delete"
+              (click)="eliminarHotel(hotel.id, hotel.nombre)"
+              title="Eliminar"
+            >
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="hoteles.length === 0">
+          <td colspan="7" class="no-data">No hay hoteles registrados en el sistema.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="btn" (click)="mostrarFormularioCrear()">Agregar Nuevo Hotel</button>
+</div>
+
+<!-- Modal de edición -->
+<app-editar-hotel
+  *ngIf="hotelAEditar"
+  [hotel]="hotelAEditar"
+  (cerrado)="cerrarEdicion()"
+  (guardado)="guardarHotel($event)"
+>
+</app-editar-hotel>
+
+<!-- Modal de creación -->
+<app-crear-hotel
+  *ngIf="mostrandoFormularioCrear"
+  (cerrado)="cerrarFormularioCrear()"
+  (hotelCreado)="hotelCreado($event)"
+>
+</app-crear-hotel>
+
+<!-- Modal de confirmación de eliminación -->
+<div *ngIf="mostrandoModalConfirmacion" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Confirmar Eliminación</h3>
+    <p>{{ mensajeModal }}</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="cerrarModalConfirmacion()">Cancelar</button>
+      <button class="btn-confirm" (click)="confirmarEliminacion()">Eliminar</button>
+    </div>
+  </div>
+</div>

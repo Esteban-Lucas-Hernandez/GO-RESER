@@ -1,0 +1,855 @@
+/* ============================================
+   NAVBAR RESPONSIVO - Mejorado
+   Breakpoints:
+   - Desktop: > 992px
+   - Tablet: 768px - 992px
+   - Mobile: < 768px
+============================================ */
+
+/* Navbar profesional para entorno productivo */
+.navbar {
+  background: rgba(255, 255, 255, 0.98);
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  min-height: 70px;
+  width: 100%;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08), 0 1px 6px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto cuando se hace scroll */
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.99);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12), 0 1px 8px rgba(0, 0, 0, 0.06);
+  min-height: 60px;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: height 0.3s ease;
+}
+
+.navbar.scrolled .nav-container {
+  height: 60px;
+}
+
+/* Logo con animación */
+.nav-logo {
+  position: relative;
+  z-index: 10;
+}
+
+.nav-logo a {
+  background: transparent;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  background-clip: initial;
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.nav-logo a:hover .nav-logo-img {
+  transform: scale(1.05);
+}
+
+.nav-logo a:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Efecto de brillo en el logo */
+.nav-logo a::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #00bfff, #0080ff, #00bfff);
+  border-radius: 8px;
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.nav-logo a:hover::before {
+  opacity: 0.3;
+}
+
+/* Menu items */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 0;
+  position: relative;
+}
+
+.nav-link {
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.2px;
+}
+
+.nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  color: #0066cc;
+  transform: translateY(-1px);
+}
+
+.nav-link.active {
+  background-color: rgba(0, 102, 204, 0.08);
+  color: #0066cc;
+  font-weight: 600;
+}
+
+/* Iconos del menú */
+.nav-icon {
+  font-size: 1rem;
+  width: 16px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.nav-link:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+/* Botón de menú hamburguesa */
+.mobile-menu-button {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+  margin-left: auto;
+}
+
+.mobile-menu-button span {
+  width: 100%;
+  height: 3px;
+  background: #00bfff;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+  position: relative;
+  transform-origin: center;
+}
+
+/* Elementos de autenticación móviles - OCULTOS por defecto en todas las pantallas */
+.auth-mobile-elements,
+.auth-mobile-elements1 {
+  display: none !important;
+}
+
+/* Botón de login */
+.login-button {
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: -0.2px;
+}
+
+.login-button:hover {
+  background: #0052a3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.25);
+}
+
+.login-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 102, 204, 0.2);
+}
+
+/* Dropdown y Avatar */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-avatar {
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.avatar-image {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  transition: all 0.2s ease;
+  background: #f5f5f5;
+}
+
+.avatar-image:hover {
+  border-color: #0066cc;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15);
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.dropdown-container:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  display: block;
+  transition: all 0.15s ease;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(0, 102, 204, 0.05);
+  color: #0066cc;
+  padding-left: 20px;
+}
+
+/* Modal Login/Register */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+
+
+.sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 200;
+  opacity: 1;
+}
+
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 190;
+}
+
+
+
+/* Clases para animación del modal */
+.modal-content.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.modal-content.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 210;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%, 49.99% { opacity: 0; z-index: 1; }
+  50%, 100% { opacity: 1; z-index: 5; }
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 150;
+}
+
+.modal-content.right-panel-active .overlay-container {
+  transform: translateX(0);
+}
+
+.overlay {
+  color: #ffffff;
+  position: relative;
+  left: 0;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.modal-content.right-panel-active .overlay {
+  transform: translateX(-9%);
+}
+
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+  background: linear-gradient(to right, #024c7a, #2bd5ff);
+}
+
+.overlay-left {
+  transform: translateX(0);
+  opacity: 0;
+}
+
+.modal-content.right-panel-active .overlay-left {
+  transform: translateX(18%);
+  opacity: 1;
+}
+
+.overlay-right {
+  right: 0;
+  transform: translateX(0%);
+  opacity: 1;
+}
+
+.modal-content.right-panel-active .overlay-right {
+  transform: translateX(-25%);
+  opacity: 0;
+}
+
+/* Elementos del formulario */
+.social-container {
+  margin: 20px 0;
+}
+
+.social-container a {
+  border: 1px solid #dddddd;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  height: 40px;
+  width: 40px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: rgb(78, 163, 249);
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.close-btn:hover {
+  background: rgb(255, 255, 255);
+  transform: rotate(90deg);
+}
+
+.ghost {
+  border-radius: 20px;
+  border: 1px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+  cursor: pointer;
+}
+
+.ghost:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+}
+
+.ghost:active {
+  transform: scale(0.95);
+}
+
+.ghost:focus {
+  outline: none;
+}
+
+.form-navigation {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 191, 255, 0.1);
+  width: 100%;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #00bfff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: #0080ff;
+  text-decoration: none;
+}
+
+/* Enlaces para login/register */
+.register-link-anchor,
+.login-link-anchor {
+  color: #00bfff;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.register-link-anchor::after,
+.login-link-anchor::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00bfff, #0080ff);
+  transition: width 0.3s ease;
+}
+
+.register-link-anchor:hover::after,
+.login-link-anchor:hover::after {
+  width: 100%;
+}
+
+.register-link-anchor:hover,
+.login-link-anchor:hover {
+  color: #0080ff;
+}
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+======================================== */
+
+/* Tablet y Mobile - Menú hamburguesa */
+@media (max-width: 992px) {
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    left: -100%;
+    top: 70px;
+    flex-direction: column;
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+    padding: 20px 0;
+    z-index: 9;
+    border-top: 1px solid rgba(0, 191, 255, 0.2);
+    gap: 0;
+  }
+
+  .nav-menu.mobile-menu-active {
+    left: 0;
+  }
+
+  .nav-item {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .nav-link {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    justify-content: center;
+    border-radius: 0;
+  }
+
+  .nav-link:hover {
+    background-color: rgba(0, 102, 204, 0.05);
+  }
+
+  /* Ocultar elementos desktop en tablet/mobile */
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Ajustar padding del container en tablet/mobile */
+  .nav-container {
+    padding: 0 16px;
+  }
+
+  /* Ajustar logo */
+  .nav-logo a {
+    font-size: 1.3rem;
+  }
+
+  .nav-logo-img {
+    height: 35px;
+  }
+
+  /* MOSTRAR elementos de autenticación móvil en tablet/mobile */
+  .auth-mobile-elements,
+  .auth-mobile-elements1 {
+    display: block !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 50px;
+  }
+
+  .auth-mobile-elements1 {
+    right: 50px;
+  }
+
+  .mobile-login-button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+/* MobilePequeño (< 480px) */
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 12px;
+  }
+
+  .nav-logo a {
+    font-size: 1.1rem;
+  }
+
+  .nav-logo-img {
+    height: 30px;
+  }
+
+  .nav-link {
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+
+  .mobile-menu-button {
+    width: 26px;
+    height: 26px;
+  }
+
+  .mobile-menu-button span {
+    height: 2.5px;
+  }
+
+  .nav-menu {
+    top: 60px;
+    padding: 15px 0;
+  }
+}
+
+/* Desktop (> 992px) - restaurar menú horizontal */
+@media (min-width: 993px) {
+  .mobile-menu-button {
+    display: none;
+  }
+
+  .nav-menu {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    width: auto;
+    background: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    gap: 4px;
+  }
+
+  .nav-item {
+    width: auto;
+    margin: 0;
+  }
+
+  .nav-link {
+    width: auto;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    justify-content: center;
+  }
+
+  .nav-container {
+    padding: 0 32px;
+  }
+
+  .nav-logo a {
+    font-size: 1.5rem;
+  }
+
+  .nav-logo-img {
+    height: 40px;
+  }
+
+  .avatar-image {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* Modal responsive */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    min-height: 500px;
+  }
+
+  .overlay-panel {
+    padding: 15px;
+  }
+
+  .overlay-panel h1 {
+    font-size: 1.5rem;
+  }
+
+  .overlay-panel p {
+    font-size: 0.9rem;
+  }
+
+  .ghost {
+    padding: 10px 20px;
+    font-size: 10px;
+  }
+
+  .sign-in-container,
+  .sign-up-container {
+    width: 100%;
+    left: 0;
+    top: 0;
+    height: 100%;
+    transform: none !important;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .sign-up-container {
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .modal-content.right-panel-active .sign-in-container {
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    transform: none !important;
+  }
+
+  .modal-content.right-panel-active .sign-up-container {
+    opacity: 1;
+    z-index: 5;
+    pointer-events: auto;
+    transform: none !important;
+    animation: none;
+  }
+
+  .overlay-container {
+    display: none;
+  }
+
+  .close-btn {
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+
+  .form-navigation {
+    display: block;
+    margin-top: 15px;
+    padding-top: 15px;
+  }
+
+  .link-button {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    width: 98%;
+    min-height: 450px;
+  }
+
+  .overlay-panel {
+    padding: 10px;
+  }
+
+  .overlay-panel h1 {
+    font-size: 1.3rem;
+    margin: 10px 0;
+  }
+
+  .overlay-panel p {
+    font-size: 0.8rem;
+    margin: 10px 0;
+  }
+
+  .ghost {
+    padding: 8px 16px;
+    font-size: 9px;
+  }
+
+  .link-button {
+    font-size: 0.8rem;
+  }
+}
+
+/* Animación de carga */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.1), transparent);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}

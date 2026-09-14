@@ -1,0 +1,69 @@
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+      <p class="section-subtitle">Experiencias reales de viajeros que han confiado en nosotros</p>
+    </div>
+
+    <div class="testimonials-container">
+      <div class="testimonial-card active">
+        <div class="testimonial-content">
+          <div class="testimonial-header">
+            <div class="client-image">
+              <img [src]="testimonials[currentTestimonial].image" 
+                   [alt]="testimonials[currentTestimonial].name" />
+            </div>
+            <div class="client-info">
+              <h4 class="client-name">{{testimonials[currentTestimonial].name}}</h4>
+              <p class="client-role">{{testimonials[currentTestimonial].role}}</p>
+              <p class="client-location">{{testimonials[currentTestimonial].location}}</p>
+            </div>
+          </div>
+          
+          <div class="testimonial-rating">
+            <span class="star" *ngFor="let star of getStars(testimonials[currentTestimonial].rating)">⭐</span>
+          </div>
+          
+          <p class="testimonial-text">{{testimonials[currentTestimonial].text}}</p>
+        </div>
+      </div>
+
+      <div class="testimonial-navigation">
+        <button class="nav-button prev" (click)="prevTestimonial()">‹</button>
+        
+        <div class="testimonial-indicators">
+          <span class="indicator" 
+                *ngFor="let testimonial of testimonials; let i = index"
+                [class.active]="i === currentTestimonial"
+                (click)="selectTestimonial(i)"></span>
+        </div>
+        
+        <button class="nav-button next" (click)="nextTestimonial()">›</button>
+      </div>
+    </div>
+
+    <!-- Vista de cuadrícula para desktop -->
+    <div class="testimonials-grid">
+      <div class="testimonial-grid-item" *ngFor="let testimonial of testimonials">
+        <div class="grid-testimonial-content">
+          <div class="grid-testimonial-header">
+            <div class="grid-client-image">
+              <img [src]="testimonial.image" [alt]="testimonial.name" />
+            </div>
+            <div class="grid-client-info">
+              <h4 class="grid-client-name">{{testimonial.name}}</h4>
+              <p class="grid-client-role">{{testimonial.role}}</p>
+            </div>
+          </div>
+          
+          <div class="grid-testimonial-rating">
+            <span class="star" *ngFor="let star of getStars(testimonial.rating)">⭐</span>
+          </div>
+          
+          <p class="grid-testimonial-text">{{testimonial.text}}</p>
+          <p class="grid-client-location">{{testimonial.location}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

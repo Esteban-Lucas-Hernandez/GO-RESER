@@ -1,0 +1,108 @@
+<div class="hoteles-section" id="hoteles">
+  <h2 class="titulo-hoteles">Hoteles Disponibles</h2>
+
+  <!-- Skeleton Loader mientras carga (previene saltos bruscos de la página) -->
+  <div *ngIf="loading" class="skeleton-carousel-container">
+    <div class="skeleton-cards-grid">
+      <div class="skeleton-hotel-card" *ngFor="let item of [1, 2, 3, 4]">
+        <div class="skeleton-image shimmer"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line title shimmer"></div>
+          <div class="skeleton-line location shimmer"></div>
+          <div class="skeleton-line rating shimmer"></div>
+          <div class="skeleton-line text shimmer"></div>
+          <div class="skeleton-button shimmer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="!loading && error" class="error-container">
+    <span class="material-symbols-outlined error-icon">error_outline</span>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Carrusel de hoteles -->
+  <div *ngIf="!loading && !error" class="hoteles-carousel">
+    <div *ngIf="getDisplayHoteles().length === 0" class="no-hoteles">
+      No se encontraron hoteles.
+    </div>
+
+    <!-- Contenedor del carrusel -->
+    <div class="carousel-container" *ngIf="getDisplayHoteles().length > 0">
+      <!-- Swiper container -->
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <div *ngFor="let hotel of getDisplayHoteles()" class="swiper-slide">
+            <div class="hotel-card">
+              <!-- Imagen del hotel -->
+              <div class="hotel-image-container">
+                <div class="hotel-image" [ngClass]="{ 'has-image': hotel.imagenUrl }">
+                  <img
+                    *ngIf="hotel.imagenUrl"
+                    [src]="hotel.imagenUrl"
+                    [alt]="hotel.nombre"
+                    (error)="handleImageError($event)"
+                  />
+                  <div class="image-placeholder" *ngIf="!hotel.imagenUrl">
+                    <i class="fas fa-hotel placeholder-icon"></i>
+                    <span>Imagen no disponible</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Información del hotel -->
+              <div class="hotel-info">
+                <h3 class="hotel-name">{{ hotel.nombre | slice:0:20 }}{{ hotel.nombre.length > 20 ? '...' : '' }}</h3>
+
+                <div class="hotel-location" (click)="buscarEnGoogle(hotel)">
+                  <i class="fas fa-map-marker-alt location-icon"></i>
+                  <span class="location-text"
+                    >{{ (getCiudadNombre(hotel) + ', ' + getDepartamentoNombre(hotel)) | slice:0:20 }}{{ (getCiudadNombre(hotel) + ', ' + getDepartamentoNombre(hotel)).length > 30 ? '...' : '' }}</span
+                  >
+                </div>
+
+                <div class="hotel-rating">
+                  <div class="stars">
+                    <i
+                      *ngFor="let star of getStarsArray(hotel.estrellas)"
+                      class="fas fa-star star-filled"
+                    ></i>
+                    <i
+                      *ngFor="let star of getEmptyStarsArray(hotel.estrellas)"
+                      class="far fa-star star-empty"
+                    ></i>
+                  </div>
+                  <span class="rating-text">{{ hotel.estrellas }}/5</span>
+                </div>
+
+                <div class="hotel-details">
+                  <p><strong>Dirección:</strong> {{ hotel.direccion | slice:0:20 }}{{ hotel.direccion.length > 20 ? '...' : '' }}</p>
+                  <p><strong>Teléfono:</strong> {{ hotel.telefono }}</p>
+
+                  <div class="hotel-policies" *ngIf="hotel.politicaCancelacion">
+                    <strong style="color: rgb(221, 2, 2)">Política de Cancelación:</strong>
+                    <div class="politica-cancelacion-container">
+                      <p>{{ hotel.politicaCancelacion | slice:0:36 }}{{ hotel.politicaCancelacion.length > 36 ? '...' : '' }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Botón para ver habitaciones -->
+                <div class="hotel-actions">
+                  <button class="btn-ver-habitaciones" (click)="verHabitaciones(hotel.id)">
+                    Ver Habitaciones
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Botones de navegación del carrusel -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="admin-panel">
+  <div class="header">
+    <h1>Panel de Administración</h1>
+    <div class="user-info" *ngIf="userInfo">
+      <div class="user-details">
+        <p>Bienvenido, {{ userInfo.username }}!</p>
+        <p>Email: {{ userInfo.email }}</p>
+      </div>
+      <!-- Avatar del usuario -->
+      <div
+        class="user-avatar"
+        *ngIf="userInfo && userInfo.fotoUrl"
+        [style.background-image]="'url(' + userInfo.fotoUrl + ')'"
+      ></div>
+      <div
+        class="user-avatar"
+        *ngIf="userInfo && !userInfo.fotoUrl"
+        [style.background-image]="'url(https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png)'"
+      ></div>
+    </div>
+  </div>
+
+  <div class="panel-content">
+    <!-- Cards de barras con centro blanco -->
+    <div class="cards-container">
+      <div class="card pie-chart">
+        <div class="card-header">
+          <h3>Categorias</h3>
+        </div>
+        <div class="card-body">
+          <div class="stats-summary">
+            <div class="stat-item">
+              <span class="stat-label">Total Categorías</span>
+              <span class="stat-value">{{ categorias.length }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Categoría más popular</span>
+              <span class="stat-value" *ngIf="categorias.length > 0">{{
+                categorias[0].nombre
+              }}</span>
+              <span class="stat-value" *ngIf="categorias.length === 0">N/A</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Porcentaje</span>
+              <span class="stat-value"
+                >{{ categorias.length > 0 ? (100 / categorias.length).toFixed(1) : 0 }}%</span
+              >
+            </div>
+            <div class="stat-item">
+              <button class="btn-ver-mas" (click)="verTodasLasCategorias()">Ver más</button>
+            </div>
+          </div>
+          <div class="chart-placeholder">
+            <div class="pie-chart-container">
+              <div class="pie-chart-wrapper">
+                <!-- Gráfico de pastel usando CSS en lugar de SVG -->
+                <div class="pie-chart-css">
+                  <div
+                    *ngFor="let categoria of categorias; let i = index"
+                    class="slice"
+                    [style.background]="getCategoriaColor(i)"
+                    [style.clipPath]="getPieSliceClip(i, categorias.length)"
+                  ></div>
+                  <div class="pie-center-circle"></div>
+                </div>
+                <div class="pie-center">
+                  <div class="center-value">Categorías</div>
+                </div>
+              </div>
+              <div class="legend" [ngClass]="{ 'legend-two-columns': categorias.length > 5 }">
+                <!-- Mostrar solo 5 categorías en pantallas menores a 560px -->
+                <div
+                  class="legend-item"
+                  *ngFor="
+                    let categoria of categorias | slice : 0 : (isMobileView ? 5 : 10);
+                    let i = index
+                  "
+                >
+                  <div class="legend-color" [style.background]="getCategoriaColor(i)"></div>
+                  <div class="legend-text">
+                    <span class="legend-label">{{ categoria.nombre }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card de últimas reseñas -->
+      <div class="card bar-chart">
+        <div class="card-header">
+          <h3>Reseñas</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart-placeholder">
+            <div class="numeric-axis-container">
+              <!-- Eje Y con números del lado izquierdo -->
+              <div class="y-axis hide-on-mobile">
+                <div class="y-tick"><span class="star-icon">★</span> 5</div>
+                <div class="y-tick"><span class="star-icon">★</span> 4</div>
+                <div class="y-tick"><span class="star-icon">★</span> 3</div>
+                <div class="y-tick"><span class="star-icon">★</span> 2</div>
+                <div class="y-tick"><span class="star-icon">★</span> 1</div>
+                <div class="y-tick"><span class="star-icon">★</span> 0</div>
+              </div>
+
+              <!-- Contenedor principal del gráfico -->
+              <div class="chart-main-container">
+                <!-- Gráfico de barras de reseñas -->
+                <div class="bar-chart-container">
+                  <div class="bar-wrapper" *ngFor="let resena of ultimasResenas; let i = index">
+                    <div
+                      class="bar"
+                      [style.height]="resena.calificacion * 34 + 'px'"
+                      [style.background]="getBarColor(resena.calificacion)"
+                    >
+                      <div class="bar-value">{{ resena.calificacion }}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Eje X con fechas abajo -->
+                <div class="x-axis-resenas">
+                  <div class="x-tick-resena" *ngFor="let resena of ultimasResenas">
+                    {{ resena.fechaResena | date : 'MM/dd' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chart-footer">
+            <p class="chart-description">Últimas 5 reseñas</p>
+            <button class="btn-ver-mas" (click)="verTodasLasResenas()">Ver más</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card de ingresos que ocupa todo el ancho -->
+    <app-ingresos></app-ingresos>
+  </div>
+</div>

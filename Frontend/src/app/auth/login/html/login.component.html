@@ -1,0 +1,60 @@
+<div class="login-container">
+  <h1>Iniciar Sesión</h1>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <input
+        id="email"
+        type="email"
+        placeholder="Email"
+        formControlName="email"
+        [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+      />
+      <div
+        class="error-message"
+        *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+      >
+        <span *ngIf="loginForm.get('email')?.errors?.['required']">Email es requerido</span>
+        <span *ngIf="loginForm.get('email')?.errors?.['email']">Ingrese un email válido</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input
+        id="password"
+        type="password"
+        placeholder="Contraseña"
+        formControlName="password"
+        [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+      />
+      <div
+        class="error-message"
+        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+      >
+        Contraseña es requerida
+      </div>
+    </div>
+    <button type="submit" [disabled]="loginForm.invalid">Ingresar</button>
+
+    <!-- Botón de inicio de sesión con Google debajo de Ingresar -->
+    <div class="google-login-container">
+      <button type="button" class="google-login-btn" (click)="loginWithGoogle()">
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google logo"
+          class="google-icon"
+        />
+        Iniciar sesión con Google
+      </button>
+    </div>
+    <div style="margin: 5px 0;" class="register-link-mobile">
+      <span>¿No tienes una cuenta? </span>
+      <button
+        type="button"
+        style="color: rgb(0, 123, 255); background: transparent; border: none; padding: 0; cursor: pointer;"
+        (click)="goToRegistro()"
+      >
+        Regístrate aquí
+      </button>
+    </div>
+  </form>
+</div>

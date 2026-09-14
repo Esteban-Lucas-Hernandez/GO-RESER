@@ -1,0 +1,54 @@
+<section class="about-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Sobre Nosotros</h2>
+      <p class="section-subtitle">Conoce la historia detrás de Go Reser y nuestro compromiso con la excelencia</p>
+    </div>
+
+    <div class="about-content">
+      <div class="company-story">
+        <div class="story-text">
+          <h3>Nuestra Historia</h3>
+          <p>
+            Fundada en 2020, Go Reser nació de la visión de transformar la manera en que las personas 
+            exploran y reservan sus experiencias de viaje. Lo que comenzó como un pequeño proyecto 
+            universitario se ha convertido en la plataforma líder de reservas de hospedaje en la región.
+          </p>
+          <p>
+            Nuestro equipo de profesionales apasionados trabaja incansablemente para conectar a viajeros 
+            con experiencias únicas, priorizando siempre la calidad, la seguridad y la satisfacción del cliente.
+          </p>
+        </div>
+        <div class="story-stats">
+          <div class="stat-item">
+            <div class="stat-number">50K+</div>
+            <div class="stat-label">Reservas Completadas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Hoteles Asociados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Satisfacción del Cliente</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Soporte Disponible</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="values-section">
+        <h3>Nuestros Valores</h3>
+        <div class="values-grid">
+          <div class="value-card" *ngFor="let value of values">
+            <div class="value-icon">{{value.icon}}</div>
+            <h4 class="value-title">{{value.title}}</h4>
+            <p class="value-description">{{value.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

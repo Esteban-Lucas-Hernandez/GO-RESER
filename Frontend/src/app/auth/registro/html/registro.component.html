@@ -1,0 +1,85 @@
+<div class="registro-container">
+  <h1>Crear Cuenta</h1>
+  <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <input
+        id="nombreCompleto"
+        type="text"
+        placeholder="Nombre Completo"
+        formControlName="nombreCompleto"
+        [class.error]="
+          registroForm.get('nombreCompleto')?.invalid && registroForm.get('nombreCompleto')?.touched
+        "
+      />
+      <div
+        class="error-message"
+        *ngIf="
+          registroForm.get('nombreCompleto')?.invalid && registroForm.get('nombreCompleto')?.touched
+        "
+      >
+        Nombre completo es requerido
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input
+        id="email"
+        type="email"
+        placeholder="Email"
+        formControlName="email"
+        [class.error]="registroForm.get('email')?.invalid && registroForm.get('email')?.touched"
+      />
+      <div
+        class="error-message"
+        *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched"
+      >
+        <span *ngIf="registroForm.get('email')?.errors?.['required']">Email es requerido</span>
+        <span *ngIf="registroForm.get('email')?.errors?.['email']">Ingrese un email válido</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input id="telefono" type="text" placeholder="Teléfono" formControlName="telefono" />
+    </div>
+
+    <div class="form-group">
+      <input id="documento" type="text" placeholder="Documento" formControlName="documento" />
+    </div>
+
+    <div class="form-group">
+      <input id="fotoUrl" type="text" placeholder="Foto URL (Opcional)" formControlName="fotoUrl" />
+      <small>Si no proporciona una imagen, se usará una por defecto.</small>
+    </div>
+
+    <div class="form-group">
+      <input
+        id="contrasena"
+        type="password"
+        placeholder="Contraseña"
+        formControlName="contrasena"
+        [class.error]="
+          registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched
+        "
+      />
+      <div
+        class="error-message"
+        *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched"
+      >
+        Contraseña es requerida
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="registroForm.invalid">Registrarse</button>
+
+    <div style="margin: 5px 0;" class="register-link-mobile">
+      <span>¿Ya tienes una cuenta? </span>
+      <button
+        type="button"
+        style="color: rgb(0, 123, 255); background: transparent; border: none; padding: 0; cursor: pointer; text-decoration: underline;"
+        (click)="goToLogin()"
+      >
+        Inicia Sesión
+      </button>
+    </div>
+  </form>
+</div>
