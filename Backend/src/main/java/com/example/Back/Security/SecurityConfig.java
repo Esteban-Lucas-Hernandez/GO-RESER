@@ -46,12 +46,14 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/auth/**").permitAll();
                 auth.requestMatchers("/public/**").permitAll();
                 auth.requestMatchers("/oauth2/**").permitAll();
                 auth.requestMatchers("/login/oauth2/**").permitAll();
+                auth.requestMatchers("/h2-console/**").permitAll();
                 auth.requestMatchers(
                     "/v3/api-docs/**",
                     "/swagger-ui.html",
