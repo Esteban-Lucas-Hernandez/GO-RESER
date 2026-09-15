@@ -1,4 +1,4 @@
-package com.example.Back.Config;
+package com.example.back.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -14,16 +14,16 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("API de Reservas").version("1.0")
-                        .description("Documentación de la API para el sistema de reservas de hoteles"))
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .info(new Info()
+                        .title("GoReser API REST")
+                        .version("1.0.0")
+                        .description("API REST para la gestión de reservas hoteleras - GoReser"))
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
                 .components(new Components()
-                        .addSecuritySchemes("bearerAuth",
-                                new SecurityScheme()
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT")
-                                        .in(SecurityScheme.In.HEADER)
-                                        .name("Authorization")));
+                        .addSecuritySchemes("Bearer Authentication", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .description("Ingresa tu token JWT para autenticarte")));
     }
 }

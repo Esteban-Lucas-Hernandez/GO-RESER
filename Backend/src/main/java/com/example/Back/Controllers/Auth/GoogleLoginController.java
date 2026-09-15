@@ -1,15 +1,18 @@
-package com.example.Back.Controllers.Auth;
+package com.example.back.controllers.auth;
 
-import com.example.Back.Dto.GoogleLoginResponseDTO;
-import com.example.Back.Services.GoogleLoginService;
+import com.example.back.dto.auth.GoogleLoginResponseDTO;
+import com.example.back.services.interfaces.GoogleLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth/google")
@@ -18,85 +21,49 @@ public class GoogleLoginController {
     @Autowired
     private GoogleLoginService googleLoginService;
 
-    /**
-     * Endpoint para iniciar sesión con Google
-     *
-     * @param authentication Token de autenticación OAuth2 de Google
-     * @return Respuesta con token JWT y datos del usuario
-     */
     @GetMapping("/login")
-    public ResponseEntity<GoogleLoginResponseDTO> googleLogin(
-            @AuthenticationPrincipal OAuth2AuthenticationToken authentication) {
-        
-        // Verificar que la autenticación sea válida
-        if (authentication == null) {
-            GoogleLoginResponseDTO response = new GoogleLoginResponseDTO();
-            response.setSuccess(false);
-            response.setMessage("Autenticación con Google fallida - No se recibió autenticación");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        // Procesar el inicio de sesión con Google
-        GoogleLoginResponseDTO response = googleLoginService.processGoogleLogin(authentication);
-        return ResponseEntity.ok(response);
+    public RedirectView initiateGoogleLogin() {
+        return new RedirectView("/oauth2/authorization/google");
     }
-    
-    /**
-     * Endpoint alternativo para iniciar sesión con Google (POST)
-     *
-     * @param authentication Token de autenticación OAuth2 de Google
-     * @return Respuesta con token JWT y datos del usuario
-     */
+
     @PostMapping("/login")
-    public ResponseEntity<GoogleLoginResponseDTO> googleLoginPost(
-            @AuthenticationPrincipal OAuth2AuthenticationToken authentication) {
-        
-        // Verificar que la autenticación sea válida
-        if (authentication == null) {
-            GoogleLoginResponseDTO response = new GoogleLoginResponseDTO();
-            response.setSuccess(false);
-            response.setMessage("Autenticación con Google fallida - No se recibió autenticación");
-            return ResponseEntity.badRequest().body(response);
+    public ResponseEntity<?> loginWithGoogle(OAuth2AuthenticationToken authentication) {
+        try {
+            if (authentication == null) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "No autenticado con Google");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            }
+            GoogleLoginResponseDTO response = googleLoginService.processGoogleLogin(authentication);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Error procesando el login con Google: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
-
-        // Procesar el inicio de sesión con Google
-        GoogleLoginResponseDTO response = googleLoginService.processGoogleLogin(authentication);
-        return ResponseEntity.ok(response);
     }
-    
-    /**
-     * Endpoint para manejar el éxito del inicio de sesión con Google
-     *
-     * @param authentication Token de autenticación OAuth2 de Google
-     * @return Respuesta con token JWT y datos del usuario
-     */
+
     @GetMapping("/success")
-    public ResponseEntity<GoogleLoginResponseDTO> googleLoginSuccess(
-            OAuth2AuthenticationToken authentication) {
-        
-        // Verificar que la autenticación sea válida
-        if (authentication == null) {
-            GoogleLoginResponseDTO response = new GoogleLoginResponseDTO();
-            response.setSuccess(false);
-            response.setMessage("Autenticación con Google fallida - No se recibió autenticación en success");
-            return ResponseEntity.badRequest().body(response);
+    public RedirectView handleGoogleSuccess(OAuth2AuthenticationToken authentication) {
+        try {
+            GoogleLoginResponseDTO response = googleLoginService.processGoogleLogin(authentication);
+            String redirectUrl = String.format(
+                "http://localhost:4200/auth/callback?token=%s&userId=%d&email=%s&name=%s&photoUrl=%s",
+                URLEncoder.encode(response.getToken(), StandardCharsets.UTF_8),
+                response.getUserId(),
+                URLEncoder.encode(response.getEmail(), StandardCharsets.UTF_8),
+                URLEncoder.encode(response.getFullName(), StandardCharsets.UTF_8),
+                URLEncoder.encode(response.getFotoUrl() != null ? response.getFotoUrl() : "", StandardCharsets.UTF_8)
+            );
+            return new RedirectView(redirectUrl);
+        } catch (Exception e) {
+            return new RedirectView("http://localhost:4200/login?error=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8));
         }
-
-        // Procesar el inicio de sesión con Google
-        GoogleLoginResponseDTO response = googleLoginService.processGoogleLogin(authentication);
-        return ResponseEntity.ok(response);
     }
-    
-    /**
-     * Endpoint para manejar el fallo del inicio de sesión con Google
-     *
-     * @return Mensaje de error
-     */
+
     @GetMapping("/failure")
-    public ResponseEntity<GoogleLoginResponseDTO> googleLoginFailure() {
-        GoogleLoginResponseDTO response = new GoogleLoginResponseDTO();
-        response.setSuccess(false);
-        response.setMessage("Falló la autenticación con Google");
-        return ResponseEntity.status(401).body(response);
+    public RedirectView handleGoogleFailure(@RequestParam(required = false) String error) {
+        String errorMessage = error != null ? error : "Error desconocido en la autenticación con Google";
+        return new RedirectView("http://localhost:4200/login?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8));
     }
 }

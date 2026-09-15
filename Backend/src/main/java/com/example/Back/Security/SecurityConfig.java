@@ -1,10 +1,13 @@
-package com.example.Back.Security;
+package com.example.back.security;
 
-import com.example.Back.Config.CustomOAuth2SuccessHandler;
+import com.example.back.config.CustomOAuth2SuccessHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,20 +15,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Autowired
     private JwtFilter jwtFilter;
-    
+
     @Autowired
     private CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
@@ -48,29 +48,20 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> {
-                logger.info("Configurando reglas de autorización");
-                
-                // Rutas abiertas
                 auth.requestMatchers("/auth/**").permitAll();
                 auth.requestMatchers("/public/**").permitAll();
-                
-                // Rutas específicas de OAuth2
                 auth.requestMatchers("/oauth2/**").permitAll();
                 auth.requestMatchers("/login/oauth2/**").permitAll();
-                
-                // Swagger
                 auth.requestMatchers(
                     "/v3/api-docs/**",
                     "/swagger-ui.html",
                     "/swagger-ui/**"
                 ).permitAll();
-                
-                // Roles
+
                 auth.requestMatchers("/user/**").hasRole("USER");
                 auth.requestMatchers("/admin/**").hasAnyRole("ADMIN");
                 auth.requestMatchers("/superadmin/**").hasRole("SUPERADMIN");
-                
-                // Cualquier otra ruta requiere autenticación
+
                 auth.anyRequest().authenticated();
             })
             .oauth2Login(oauth2 -> oauth2
@@ -79,7 +70,6 @@ public class SecurityConfig {
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-        logger.info("Cadena de filtros de seguridad configurada");
         return http.build();
     }
 }
