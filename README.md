@@ -1,37 +1,63 @@
-GoReser es una solución integral para la gestión hotelera robusta, escalable y eficiente. Este sistema permite centralizar la operación de un hotel, desde el control de inventario de habitaciones hasta la gestión inteligente de reservas y estados de ocupación.
+# 🏨 GO RESER - Sistema Integral de Gestión Hotelera
 
+[![Backend Docs](https://img.shields.io/badge/Documentación-Backend-007396?style=for-the-badge&logo=spring&logoColor=white)](Backend/README.md)
+[![Frontend Docs](https://img.shields.io/badge/Documentación-Frontend-DD0031?style=for-the-badge&logo=angular&logoColor=white)](Frontend/README.md)
+[![Database](https://img.shields.io/badge/PostgreSQL-15%2B-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](#-stack-tecnológico)
 
-Stack TecnológicoLa aplicación utiliza una arquitectura de vanguardia para asegurar el rendimiento y la mantenibilidad
+**GO RESER** es una plataforma web full-stack de alto rendimiento diseñada para la gestión completa de reservas, administración de hoteles, habitaciones y control de usuarios según sus roles (Cliente, Admin de Hotel y SuperAdmin).
 
-Backend: Java 21 con Spring Boot 3.
+---
 
-Persistencia: Spring Data JPA con PostgreSQL.
+## 🚀 Inicio Rápido
 
-Seguridad: Autenticación basada en JWT (JSON Web Tokens).
+### Requisitos Previos
+- **Java JDK**: 17 o superior
+- **Node.js**: 18.x / 20.x / 22.x
+- **PostgreSQL**: 15 o superior
 
-Frontend: Angular 21+ con TypeScript.
+### 1. Iniciar Backend
+```bash
+cd Backend
+./mvnw spring-boot:run
+```
+> [👉 Ver guía detallada de configuración y estructura del Backend](Backend/README.md)
 
-UI: Estilizado con Tailwind CSS y componentes de Angular Material.
+### 2. Iniciar Frontend
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+> [👉 Ver guía detallada de componentes y arquitectura del Frontend](Frontend/README.md)
 
-DevOps/Infraestructura: Gestión de dependencias con Maven y arquitectura orientada a servicios.
+---
 
+## 🛠️ Stack Tecnológico
 
-Arquitectura de SoftwareGoReser implementa un diseño de Arquitectura Limpia (Clean Architecture) separando las responsabilidades de forma estricta
+| Capa | Tecnología | Descripción |
+| :--- | :--- | :--- |
+| **Backend** | Spring Boot 3, Java 17/21 | API RESTful con Spring Security y JWT |
+| **Base de Datos** | PostgreSQL, Spring Data JPA | Persistencia relacional optimizada |
+| **Frontend** | Angular (Standalone), TypeScript | Arquitectura modular basada en características (`features`) |
+| **Estilos** | CSS3, FontAwesome, SweetAlert2 | UI responsiva y moderna |
 
-Servicios: Orquestación de casos de uso (Cálculo de tarifas dinámicas, validación de disponibilidad).
+---
 
-Controladores: Endpoints REST documentados que exponen los recursos al frontend.
+## 📁 Estructura del Proyecto
 
-Seguridad: Filtros de Spring Security para proteger las rutas críticas.
+```text
+GO_RESER/
+├── 📂 Backend/     # API REST en Spring Boot, Controladores, Entidades y Servicios
+└── 📂 Frontend/    # Aplicación Angular (Core, Shared, Features)
+```
 
-Antes de confirmar cualquier transacción, se verifica la intersección de intervalos de fechas:$$[CheckIn, CheckOut] \cap [Reservas Existentes]$$2. 
+- 📖 Para ver el detalle técnico del Backend: [Ir a Backend/README.md](Backend/README.md)
+- 📖 Para ver el detalle técnico del Frontend: [Ir a Frontend/README.md](Frontend/README.md)
 
-Ciclo de Vida de Reserva DinámicoLa reserva transiciona a través de estados controlados, garantizando la integridad de los datos
+---
 
+## 🔒 Roles y Permisos
 
-PENDING: Reserva temporal iniciada.CONFIRMED: Pago o garantía recibida.CHECKED_IN: Huésped registrado en sitio.CHECKED_OUT: 
-
-Facturación finalizada y habitación lista para limpieza.
-
-
-Configuración del ProyectoRequisitosJava Development Kit (JDK) 21.Node.js (LTS).PostgreSQL 15+..
+- **ROLE_USER**: Búsqueda de hoteles, habitaciones, creación de reservas y reseñas.
+- **ROLE_ADMIN**: Gestión de habitaciones, imágenes, solicitudes y reservas del hotel asignado.
+- **ROLE_SUPERADMIN**: Panel global de administración, hoteles, categorías, usuarios y reportes del sistema.

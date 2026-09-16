@@ -1,10 +1,18 @@
-HELP.md
+# Compiled class files & build directories
 target/
-.mvn/wrapper/maven-wrapper.jar
+build/
+bin/
+out/
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# Help & log files
+HELP.md
+*.log
+logs/
+
+# STS / Eclipse
 .apt_generated
 .classpath
 .factorypath
@@ -13,21 +21,30 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
+# IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# VS Code
 .vscode/
+
+# Database / Local config secrets
+application-local.properties
+application-local.yml
+application-secret.properties
+application-secret.yml
+.env
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini

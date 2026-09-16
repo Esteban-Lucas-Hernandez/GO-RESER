@@ -1,0 +1,122 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <a href="/">
+        <img src="assets/logo/logo.png" alt="GO RESER" class="nav-logo-img" />
+      </a>
+    </div>
+
+    <!-- Elementos de autenticación para móviles (fuera del menú) -->
+    <div class="auth-mobile-elements1" *ngIf="isAuthenticated">
+      <app-dropdown-menu [userInfo]="userInfo"></app-dropdown-menu>
+    </div>
+    <div class="auth-mobile-elements" *ngIf="!isAuthenticated">
+      <button class="login-button mobile-login-button" (click)="openLoginModal()">
+        <i class="fas fa-sign-in-alt nav-icon"></i>
+        <span>Iniciar Sesión</span>
+      </button>
+    </div>
+
+    <!-- Botón de menú hamburguesa para móviles -->
+    <div class="mobile-menu-button" (click)="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <ul class="nav-menu" [class.mobile-menu-active]="showMobileMenu">
+      <li class="nav-item">
+        <a href="#" (click)="scrollToHeroSearch($event)" class="nav-link">
+          <i class="fas fa-home nav-icon"></i>
+          <span>Inicio</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" (click)="scrollToHotels($event)" class="nav-link">
+          <i class="fas fa-hotel nav-icon"></i>
+          <span>Hoteles</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" (click)="scrollToHistory($event)" class="nav-link">
+          <i class="fas fa-book nav-icon"></i>
+          <span>Historia</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" (click)="scrollToTeam($event)" class="nav-link">
+          <i class="fas fa-users nav-icon"></i>
+          <span>Equipo</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" (click)="scrollToTestimonials($event)" class="nav-link">
+          <i class="fas fa-star nav-icon"></i>
+          <span>Clientes</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" (click)="scrollToNewsletter($event)" class="nav-link">
+          <i class="fas fa-envelope-open nav-icon"></i>
+          <span>Suscripción</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" (click)="scrollToContact($event)" class="nav-link">
+          <i class="fas fa-envelope nav-icon"></i>
+          <span>Contacto</span>
+        </a>
+      </li>
+      <!-- Mostrar dropdown de usuario si está autenticado (solo en desktop) -->
+      <li class="nav-item dropdown-item-margin hide-on-mobile" *ngIf="isAuthenticated">
+        <app-dropdown-menu [userInfo]="userInfo"></app-dropdown-menu>
+      </li>
+      <!-- Mostrar botón de iniciar sesión s  i no está autenticado (solo en desktop) -->
+      <li class="nav-item hide-on-mobile" *ngIf="!isAuthenticated">
+        <button class="login-button" (click)="openLoginModal()">
+          <span>Iniciar Sesión</span>&nbsp;
+          <i class="fas fa-sign-in-alt nav-icon"></i>
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Modal de inicio de sesión -->
+<div class="modal-overlay" *ngIf="showLoginModal" (click)="closeLoginModal()">
+  <div
+    class="modal-content"
+    [class.right-panel-active]="isSignUpActive"
+    (click)="$event.stopPropagation()"
+  >
+    <button class="close-btn" (click)="closeLoginModal()">×</button>
+    <div class="form-container sign-in-container">
+      <app-login 
+        (loginSuccess)="onLoginSuccess($event)" 
+        (registerRequested)="toggleSignUp()">
+      </app-login>
+    </div>
+    <div class="form-container sign-up-container">
+      <app-registro 
+        (registroSuccess)="onRegistroSuccess($event)"
+        (loginRequested)="toggleSignIn()">
+      </app-registro>
+    </div>
+    <div class="overlay-container">
+      <div class="overlay">
+        <div class="overlay-panel overlay-left">
+          <h1>¡Bienvenido de vuelta!</h1>
+          <p>Para mantenerte conectado con nosotros, inicia sesión con tu información personal</p>
+          <button class="ghost" id="signIn" (click)="toggleSignIn()">Iniciar Sesión</button>
+        </div>
+        <div class="overlay-panel overlay-right">
+          <h1>¡Hola, Amigo!</h1>
+          <p>Ingresa tus datos personales y comienza tu viaje con nosotros</p>
+          <button class="ghost" id="signUp" (click)="toggleSignUp()">Registrarse</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de registro (ya no se necesita ya que está integrado en el modal de login) -->

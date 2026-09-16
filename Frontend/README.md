@@ -1,59 +1,61 @@
-# Front
+# 🎨 GO RESER - Frontend (Angular Standalone)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+[![Regresar al README Principal](https://img.shields.io/badge/⬅️_Volver-README_Global-gray?style=for-the-badge)](../README.md)
+[![Angular](https://img.shields.io/badge/Angular-19-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-## Development server
+El **Frontend** de GO RESER está construido sobre **Angular** haciendo uso de la arquitectura basada en **Componentes Standalone** y organizado bajo la estructura de diseño orientada a características (`features`).
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
+## 📂 Estructura Detallada del Frontend
+
+```text
+Frontend/src/app/
+├── 🛡️ core/                  # Infraestructura central y singleton
+│   ├── 🔐 auth/              # Servicio de Autenticación, Interceptor JWT, Utils
+│   ├── 🚪 guards/            # AuthGuard, AdminGuard, SuperAdminGuard
+│   └── 📄 models/            # DTOs y modelos globales (User, Profile)
+│
+├── 🧩 shared/                # Componentes reutilizables en toda la app
+│   └── 🎨 components/        # Navbar unificado, Nav, Footer, DropdownMenu
+│
+└── 🌟 features/              # Módulos funcionales divididos por dominio
+    ├── 🔑 auth/              # Login, Registro y Google Callback
+    ├── 🌐 public/            # Landing Page, Listado de Hoteles, Reservas del cliente
+    ├── 🛠️ admin/             # Dashboard de Hotelero, Habitaciones, Categorías
+    └── 👑 superadmin/        # Control global de Usuarios, Hoteles y Reportes
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🛠️ Comandos de Desarrollo
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+### Instalar Dependencias
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+### Iniciar Servidor de Desarrollo
 ```bash
-ng generate --help
+npm run dev
 ```
+Accede en tu navegador a `http://localhost:4200/`.
 
-## Building
-
-To build the project run:
-
+### Compilación de Producción
 ```bash
-ng build
+npm run build
 ```
+Genera los archivos optimizados en la carpeta `dist/Front`.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 🔒 Manejo de Rutas y Guards
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- **`/public`**: Rutas de libre acceso para clientes y usuarios anónimos.
+- **`/admin`**: Protegido por `AdminGuard` (Acceso exclusivo `ROLE_ADMIN`).
+- **`/superadmin`**: Protegido por `SuperAdminGuard` (Acceso exclusivo `ROLE_SUPERADMIN`).
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+[⬅️ Regresar al README Principal](../README.md)
