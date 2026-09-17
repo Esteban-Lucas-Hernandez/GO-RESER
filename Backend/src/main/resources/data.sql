@@ -1,21 +1,6 @@
 -- SQL Seed for H2 (Clean Demo Data)
 SET REFERENTIAL_INTEGRITY FALSE;
 
--- Data for table: roles (3 rows)
-INSERT INTO roles (id, name) VALUES (1, 'ROLE_USER');
-INSERT INTO roles (id, name) VALUES (2, 'ROLE_ADMIN');
-INSERT INTO roles (id, name) VALUES (3, 'ROLE_SUPERADMIN');
-
--- Data for table: usuarios (3 rows)
-INSERT INTO usuarios (id_usuario, contrasena, documento, email, estado, fecha_registro, foto_url, nombre_completo, telefono) VALUES (1, '$2a$10$I4.jeMxZrvtkdEcMzxTTZOu3OhU1AIg9HHe9CpkcbvKimiKLwaSlW', 'ADMIN001', 'admin@admin.com', TRUE, '2026-03-10 15:24:16.628000', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', 'Administrador General', '+57 300 123 4567');
-INSERT INTO usuarios (id_usuario, contrasena, documento, email, estado, fecha_registro, foto_url, nombre_completo, telefono) VALUES (2, '$2a$10$I4.jeMxZrvtkdEcMzxTTZOu3OhU1AIg9HHe9CpkcbvKimiKLwaSlW', 'SUPERADMIN001', 'superadmin@admin.com', TRUE, '2026-03-10 15:24:18.321000', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', 'Super Administrador', '+57 300 765 4321');
-INSERT INTO usuarios (id_usuario, contrasena, documento, email, estado, fecha_registro, foto_url, nombre_completo, telefono) VALUES (3, '$2a$10$I4.jeMxZrvtkdEcMzxTTZOu3OhU1AIg9HHe9CpkcbvKimiKLwaSlW', '1114291676', 'cliente@gmail.com', TRUE, '2026-03-25 16:43:12.005000', 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', 'Lucas Hernández (Cliente)', '+57 300 455 4430');
-
--- Data for table: usuario_roles (3 rows)
-INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (1, 2);
-INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (2, 3);
-INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (3, 1);
-
 -- Data for table: departamentos (32 rows)
 INSERT INTO departamentos (id_departamento, created_at, nombre) VALUES (1, '2026-03-20 02:40:35.876200', 'Amazonas');
 INSERT INTO departamentos (id_departamento, created_at, nombre) VALUES (2, '2026-03-20 02:40:35.876200', 'Antioquia');
@@ -464,8 +449,8 @@ INSERT INTO pagos (id_pago, fecha_pago, metodo, monto, referencia_pago, id_reser
 SET REFERENTIAL_INTEGRITY TRUE;
 
 -- Reset H2 Auto Increment Sequences
-ALTER TABLE public.roles ALTER COLUMN id RESTART WITH 4;
-ALTER TABLE public.usuarios ALTER COLUMN id_usuario RESTART WITH 4;
+ALTER TABLE public.roles ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE public.usuarios ALTER COLUMN id_usuario RESTART WITH 1;
 ALTER TABLE public.departamentos ALTER COLUMN id_departamento RESTART WITH 33;
 ALTER TABLE public.ciudades ALTER COLUMN id_ciudad RESTART WITH 152;
 ALTER TABLE public.categorias_habitacion ALTER COLUMN id_categoria RESTART WITH 6;
