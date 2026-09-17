@@ -9,6 +9,7 @@ public class State {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_departamento")
     private Integer id;
 
     @Column(nullable = false, length = 100)

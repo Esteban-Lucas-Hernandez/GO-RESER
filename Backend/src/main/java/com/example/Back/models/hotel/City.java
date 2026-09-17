@@ -10,6 +10,7 @@ public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_ciudad")
     private Integer id;
 
     @Column(nullable = false, length = 100)
@@ -22,7 +23,7 @@ public class City {
     private BigDecimal longitud;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "departamento_id", nullable = false)
+    @JoinColumn(name = "id_departamento", nullable = false)
     private State departamento;
 
     @Column(name = "created_at")
