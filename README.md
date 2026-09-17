@@ -2,7 +2,8 @@
 
 [![Backend Docs](https://img.shields.io/badge/Documentación-Backend-007396?style=for-the-badge&logo=spring&logoColor=white)](Backend/README.md)
 [![Frontend Docs](https://img.shields.io/badge/Documentación-Frontend-DD0031?style=for-the-badge&logo=angular&logoColor=white)](Frontend/README.md)
-[![Database](https://img.shields.io/badge/PostgreSQL-15%2B-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](#-stack-tecnológico)
+[![Swagger UI](https://img.shields.io/badge/Swagger-API_Docs-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](http://localhost:8080/swagger-ui/index.html)
+[![Database](https://img.shields.io/badge/H2_Database-In--Memory-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](#-roles-permisos-y-credenciales-de-prueba-demo)
 
 **GO RESER** es una plataforma web full-stack de alto rendimiento diseñada para la gestión completa de reservas, administración de hoteles, habitaciones y control de usuarios según sus roles (Cliente, Admin de Hotel y SuperAdmin).
 
@@ -56,8 +57,18 @@ GO_RESER/
 
 ---
 
-## 🔒 Roles y Permisos
+## 🔒 Roles, Permisos y Credenciales de Prueba (Demo)
 
-- **ROLE_USER**: Búsqueda de hoteles, habitaciones, creación de reservas y reseñas.
-- **ROLE_ADMIN**: Gestión de habitaciones, imágenes, solicitudes y reservas del hotel asignado.
-- **ROLE_SUPERADMIN**: Panel global de administración, hoteles, categorías, usuarios y reportes del sistema.
+El sistema viene con cuentas precargadas en base de datos para facilitar la evaluación inmediata de cada rol:
+
+| Rol | Correo (Usuario) | Contraseña | Alcance y Permisos |
+| :--- | :--- | :--- | :--- |
+| **👤 ROLE_USER (Cliente)** | `cliente@gmail.com` | `123456` | Explorar catálogo, reservar habitaciones y dejar reseñas. |
+| **🏨 ROLE_ADMIN (Hotel)** | `admin@admin.com` | `admin123` | Administrar habitaciones, tarifas, fotos y reservas del hotel. |
+| **👑 ROLE_SUPERADMIN** | `superadmin@admin.com` | `superadmin123` | Control total del sistema, hoteles, usuarios y reportes. |
+
+> 📑 **Documentación y pruebas de endpoints (Swagger):** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)  
+> 🗄️ **Base de datos interactiva (Consola H2):** Puedes explorar los datos y tablas en vivo en [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (JDBC URL: `jdbc:h2:mem:go_reser_db`, Usuario: `sa`, sin contraseña).  
+> 📖 Para más detalles de configuración y endpoints, consulta el [README del Backend](Backend/README.md).
+
+
