@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class LoginServiceImpl implements LoginService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UserRepository usuarioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

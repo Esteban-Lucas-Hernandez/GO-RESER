@@ -15,6 +15,7 @@ public class Hotel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_hotel")
     private Integer id;
 
     @Column(nullable = false)
@@ -25,11 +26,11 @@ public class Hotel {
     private String email;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ciudad_id")
+    @JoinColumn(name = "id_ciudad")
     private City ciudad;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "id_usuario")
     private User usuario;
 
     @Column(columnDefinition = "TEXT")
