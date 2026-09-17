@@ -45,7 +45,7 @@ public class DataInitializer {
                 admin.setContrasena(passwordEncoder.encode("admin123"));
                 admin.setRoles(Set.of(roleAdmin));
                 usuarioRepository.save(admin);
-                System.out.println("✅ ADMIN creado: admin@admin.com / admin123");
+                System.out.println("✅ ADMIN creado (ID 1): admin@admin.com / admin123");
             }
 
             if (usuarioRepository.findByEmail("superadmin@admin.com").isEmpty()) {
@@ -57,8 +57,21 @@ public class DataInitializer {
                 superAdmin.setContrasena(passwordEncoder.encode("superadmin123"));
                 superAdmin.setRoles(Set.of(roleSuperAdmin));
                 usuarioRepository.save(superAdmin);
-                System.out.println("✅ SUPERADMIN creado: superadmin@admin.com / superadmin123");
+                System.out.println("✅ SUPERADMIN creado (ID 2): superadmin@admin.com / superadmin123");
+            }
+
+            if (usuarioRepository.findByEmail("cliente@gmail.com").isEmpty()) {
+                User cliente = new User();
+                cliente.setNombreCompleto("Lucas Hernández (Cliente)");
+                cliente.setEmail("cliente@gmail.com");
+                cliente.setTelefono("+57 300 455 4430");
+                cliente.setDocumento("1114291676");
+                cliente.setContrasena(passwordEncoder.encode("123456"));
+                cliente.setRoles(Set.of(roleUser));
+                usuarioRepository.save(cliente);
+                System.out.println("✅ CLIENTE creado (ID 3): cliente@gmail.com / 123456");
             }
         };
     }
 }
+
