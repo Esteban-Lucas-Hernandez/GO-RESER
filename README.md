@@ -12,35 +12,40 @@
 ## 🚀 Inicio Rápido
 
 ### Requisitos Previos
+
 - **Java JDK**: 17 o superior
 - **Node.js**: 18.x / 20.x / 22.x
 - **PostgreSQL**: 15 o superior
 
 ### 1. Iniciar Backend
+
 ```bash
 cd Backend
-./mvnw spring-boot:run
+mvnw spring-boot:run
 ```
+
 > [👉 Ver guía detallada de configuración y estructura del Backend](Backend/README.md)
 
 ### 2. Iniciar Frontend
+
 ```bash
 cd Frontend
 npm install
 npm run dev
 ```
+
 > [👉 Ver guía detallada de componentes y arquitectura del Frontend](Frontend/README.md)
 
 ---
 
 ## 🛠️ Stack Tecnológico
 
-| Capa | Tecnología | Descripción |
-| :--- | :--- | :--- |
-| **Backend** | Spring Boot 3, Java 17/21 | API RESTful con Spring Security y JWT |
-| **Base de Datos** | PostgreSQL, Spring Data JPA | Persistencia relacional optimizada |
-| **Frontend** | Angular (Standalone), TypeScript | Arquitectura modular basada en características (`features`) |
-| **Estilos** | CSS3, FontAwesome, SweetAlert2 | UI responsiva y moderna |
+| Capa                    | Tecnología                      | Descripción                                                   |
+| :---------------------- | :------------------------------- | :------------------------------------------------------------- |
+| **Backend**       | Spring Boot 3, Java 17/21        | API RESTful con Spring Security y JWT                          |
+| **Base de Datos** | PostgreSQL, Spring Data JPA      | Persistencia relacional optimizada                             |
+| **Frontend**      | Angular (Standalone), TypeScript | Arquitectura modular basada en características (`features`) |
+| **Estilos**       | CSS3, FontAwesome, SweetAlert2   | UI responsiva y moderna                                        |
 
 ---
 
@@ -61,14 +66,12 @@ GO_RESER/
 
 El sistema viene con cuentas precargadas en base de datos para facilitar la evaluación inmediata de cada rol:
 
-| Rol | Correo (Usuario) | Contraseña | Alcance y Permisos |
-| :--- | :--- | :--- | :--- |
-| **👤 ROLE_USER (Cliente)** | `cliente@gmail.com` | `123456` | Explorar catálogo, reservar habitaciones y dejar reseñas. |
-| **🏨 ROLE_ADMIN (Hotel)** | `admin@admin.com` | `admin123` | Administrar habitaciones, tarifas, fotos y reservas del hotel. |
-| **👑 ROLE_SUPERADMIN** | `superadmin@admin.com` | `superadmin123` | Control total del sistema, hoteles, usuarios y reportes. |
+| Rol                              | Correo (Usuario)         | Contraseña       | Alcance y Permisos                                             |
+| :------------------------------- | :----------------------- | :---------------- | :------------------------------------------------------------- |
+| **👤 ROLE_USER (Cliente)** | `cliente@gmail.com`    | `123456`        | Explorar catálogo, reservar habitaciones y dejar reseñas.    |
+| **🏨 ROLE_ADMIN (Hotel)**  | `admin@admin.com`      | `admin123`      | Administrar habitaciones, tarifas, fotos y reservas del hotel. |
+| **👑 ROLE_SUPERADMIN**     | `superadmin@admin.com` | `superadmin123` | Control total del sistema, hoteles, usuarios y reportes.       |
 
-> 📑 **Documentación y pruebas de endpoints (Swagger):** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)  
-> 🗄️ **Base de datos interactiva (Consola H2):** Puedes explorar los datos y tablas en vivo en [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (JDBC URL: `jdbc:h2:mem:go_reser_db`, Usuario: `sa`, sin contraseña).  
+> 📑 **Documentación y pruebas de endpoints (Swagger):** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+> 🗄️ **Base de datos interactiva (Consola H2):** Puedes explorar los datos y tablas en vivo en [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (JDBC URL: `jdbc:h2:mem:go_reser_db`, Usuario: `sa`, sin contraseña).
 > 📖 Para más detalles de configuración y endpoints, consulta el [README del Backend](Backend/README.md).
-
-
