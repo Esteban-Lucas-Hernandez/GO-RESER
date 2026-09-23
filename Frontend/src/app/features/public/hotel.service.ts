@@ -22,6 +22,8 @@ export interface Ciudad {
   id: number;
   nombre: string;
   departamento?: Departamento;
+  departamentoNombre?: string;
+  departamentoId?: number;
 }
 
 export interface Departamento {
@@ -286,7 +288,7 @@ export class HotelService {
 
   // Método para confirmar un pago
   confirmarPago(idReserva: number, pago: PagoConfirmacion): Observable<Blob> {
-    const url = `${this.pagosUrl}/confirmar/${idReserva}`;
+    const url = `${this.pagosUrl}/confirmar/${idReserva}/pdf`;
     const headers = this.getAuthHeaders();
 
     // Usamos responseType: 'blob' para recibir el PDF como Blob
@@ -334,7 +336,10 @@ export class HotelService {
   // Método para obtener las fechas reservadas de una habitación
   getFechasReservadas(habitacionId: number): Observable<string[][]> {
     const url = `${this.reservasUrl}/habitacion/${habitacionId}/fechas-reservadas`;
-    const headers = this.getAuthHeaders();
+    const headers = new HttpHeaders({
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    });
 
     return this.http.get<string[][]>(url, { headers });
   }

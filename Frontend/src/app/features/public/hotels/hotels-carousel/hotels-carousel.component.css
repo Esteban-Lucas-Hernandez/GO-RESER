@@ -252,6 +252,10 @@
 .location-text {
   font-size: 0.85rem;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .hotel-rating {

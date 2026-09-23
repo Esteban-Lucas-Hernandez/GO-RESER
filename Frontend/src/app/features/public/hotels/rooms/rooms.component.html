@@ -109,16 +109,26 @@
         <!-- Left Column -->
         <div class="left-column">
           <!-- HeaderImage -->
-          <div
-            class="header-image"
-            [attr.data-alt]="'Vista exterior del hotel ' + (hotel.nombre || 'seleccionado')"
-            [style.background-image]="
-              'url(' +
-              (hotel.imagenUrl ||
-                'https://lh3.googleusercontent.com/aida-public/AB6AXuAzLpvSZBH8mXfxs_YfWe1kNAp97DeTvwHyH2wM-CbPZHyKbSrmFyuVvJ-qNEQBPA42iVFSRFTWsG7FSZ-ZaF0ir4YSFJcl526noYq4sUUCqN3pPrpPh4XB_IqYceuPGKVt4HvUCNXwYRb94gH4BvbZ62ouUJdaafmWa-Dv-MV4loZ1UUHOJSnFz8nFt61PdeohfIt5Wv4NfzYEvvI4l1XDg3zpNPkVlZ2EKL-YrH8HpmvXHBCtyToTS6L0AVX1LB6nRISkhj03Q4c') +
-              ')'
-            "
-          ></div>
+          <div class="header-image">
+            <div class="img-skeleton-loader" *ngIf="!esImagenCargada(hotel.imagenUrl)">
+              <div class="img-skeleton-shimmer"></div>
+              <div class="img-loader-spinner">
+                <div class="img-spinner-circle"></div>
+                <span class="img-loader-text">Cargando hotel...</span>
+              </div>
+            </div>
+
+            <img
+              *ngIf="hotel.imagenUrl"
+              [src]="hotel.imagenUrl"
+              [alt]="'Vista exterior del hotel ' + (hotel.nombre || 'seleccionado')"
+              class="hotel-cover-img"
+              [class.img-visible]="esImagenCargada(hotel.imagenUrl)"
+              [class.img-oculta]="!esImagenCargada(hotel.imagenUrl)"
+              (load)="onImagenCargada(hotel.imagenUrl)"
+              (error)="onImagenError(hotel.imagenUrl)"
+            />
+          </div>
 
           <!-- Hotel Information -->
           <div class="amenities-section">
@@ -126,7 +136,7 @@
             <div class="hotel-info-grid">
               <div class="info-item">
                 <span class="material-symbols-outlined">location_on</span>
-                <span>{{ hotel.ciudad?.nombre }}, {{ hotel.ciudad?.departamento?.nombre }}</span>
+                <span>{{ hotel.ciudad?.nombre }}{{ (hotel.ciudad?.departamentoNombre || hotel.ciudad?.departamento?.nombre) ? ', ' + (hotel.ciudad?.departamentoNombre || hotel.ciudad?.departamento?.nombre) : '' }}</span>
               </div>
               <div class="info-item">
                 <span class="material-symbols-outlined">email</span>
@@ -168,15 +178,25 @@
               <!-- Room Item -->
               <div *ngFor="let habitacion of habitacionesPaginadas" class="room-card">
                 <div class="room-image-container">
-                  <div
-                    class="room-image"
-                    [attr.data-alt]="'Habitación ' + habitacion.numero"
-                    [style.background-image]="
-                      habitacion.imagenUrl ? 'url(' + habitacion.imagenUrl + ')' : 'none'
-                    "
-                    [ngClass]="{ placeholder: !habitacion.imagenUrl }"
-                  >
-                    <div *ngIf="!habitacion.imagenUrl" class="image-placeholder">
+                  <!-- Loader para la imagen de la habitación -->
+                  <div class="img-skeleton-loader" *ngIf="habitacion.imagenUrl && !esImagenCargada(habitacion.imagenUrl)">
+                    <div class="img-skeleton-shimmer"></div>
+                    <div class="img-spinner-circle sm"></div>
+                  </div>
+
+                  <img
+                    *ngIf="habitacion.imagenUrl"
+                    [src]="habitacion.imagenUrl"
+                    [alt]="'Habitación ' + habitacion.numero"
+                    class="room-photo-img"
+                    [class.img-visible]="esImagenCargada(habitacion.imagenUrl)"
+                    [class.img-oculta]="!esImagenCargada(habitacion.imagenUrl)"
+                    (load)="onImagenCargada(habitacion.imagenUrl)"
+                    (error)="onImagenError(habitacion.imagenUrl)"
+                  />
+
+                  <div *ngIf="!habitacion.imagenUrl" class="room-image placeholder">
+                    <div class="image-placeholder">
                       <span class="material-symbols-outlined">image</span>
                       <span>Imagen no disponible</span>
                     </div>

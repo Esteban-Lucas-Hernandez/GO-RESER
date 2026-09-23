@@ -9,26 +9,27 @@ export class SuperAdminGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    // Verificar si el usuario está autenticado
-    if (this.authService.isAuthenticated()) {
-      // Obtener el rol del usuario
-      const userRole = this.authService.getUserRole();
-      console.log('SuperAdminGuard - Rol del usuario:', userRole);
+    console.log('🛡️ [SUPERADMIN GUARD] Evaluando canActivate()...');
 
-      // Verificar si el usuario tiene rol de super administrador
+    if (this.authService.isAuthenticated()) {
+      const userRole = this.authService.getUserRole();
+      console.log('🛡️ [SUPERADMIN GUARD] Usuario autenticado. Rol detectado:', userRole);
+
       if (userRole === 'ROLE_SUPERADMIN') {
-        console.log('SuperAdminGuard - Acceso permitido');
-        return true; // Permitir el acceso
+        console.log('✅ [SUPERADMIN GUARD] Acceso permitido a ruta de SuperAdmin.');
+        return true;
       } else {
-        // Redirigir a la página principal si no es super administrador
-        console.log('SuperAdminGuard - Acceso denegado, redirigiendo a /public');
-        this.router.navigate(['/public']);
+        console.error('⛔ [SUPERADMIN GUARD] Acceso DENEGADO. Rol no es ROLE_SUPERADMIN:', userRole, 'Redirigiendo a /public...');
+        this.router.navigate(['/public']).then((success) => {
+          console.log('🧭 [SUPERADMIN GUARD] Redirección a /public resultado:', success);
+        });
         return false;
       }
     } else {
-      // Redirigir a la página de login si no está autenticado
-      console.log('SuperAdminGuard - Usuario no autenticado, redirigiendo a /login');
-      this.router.navigate(['/login']);
+      console.error('⛔ [SUPERADMIN GUARD] Usuario no autenticado (sin token). Redirigiendo a /login...');
+      this.router.navigate(['/login']).then((success) => {
+        console.log('🧭 [SUPERADMIN GUARD] Redirección a /login resultado:', success);
+      });
       return false;
     }
   }

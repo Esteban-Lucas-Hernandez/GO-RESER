@@ -171,26 +171,20 @@ throw new Error('Method not implemented.');
   }
 
   onLoginSuccess(event: any) {
+    console.log('🔔 [NAV COMPONENT] onLoginSuccess disparado con datos:', event);
     // Cerrar el modal
     this.closeLoginModal();
+    console.log('🔔 [NAV COMPONENT] Modal de login cerrado.');
 
     // Actualizar el estado de autenticación
     this.isAuthenticated = true;
 
-    // Cargar la información completa del perfil
-    this.loadUserProfile();
-
-    // Verificar el rol del usuario y redirigir según corresponda
-    setTimeout(() => {
-      const userRole = this.authService.getUserRole();
-      if (userRole === 'ROLE_ADMIN') {
-        // Redirigir a la página de administración
-        this.router.navigate(['/admin/dashboard']);
-      } else if (userRole === 'ROLE_SUPERADMIN') {
-        // Redirigir a la página de superadministración
-        this.router.navigate(['/superadmin/usuarios']);
-      }
-    }, 100);
+    // Solo cargar perfil aquí si el usuario no va a navegar a paneles de admin o superadmin
+    const userRole = this.authService.getUserRole();
+    if (userRole !== 'ROLE_ADMIN' && userRole !== 'ROLE_SUPERADMIN') {
+      console.log('🔔 [NAV COMPONENT] Solicitando carga de perfil de usuario...');
+      this.loadUserProfile();
+    }
   }
 
   onRegistroSuccess(event: any) {

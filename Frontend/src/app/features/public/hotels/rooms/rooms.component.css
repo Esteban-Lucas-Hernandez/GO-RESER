@@ -245,6 +245,7 @@ body.dark .rating-text {
 .header-image {
   width: 100%;
   height: 20rem;
+  position: relative;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -254,6 +255,13 @@ body.dark .rating-text {
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: var(--transition);
+}
+
+.hotel-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* Efecto hover eliminado */
@@ -628,10 +636,18 @@ body.dark .room-card {
 .room-image-container {
   width: 100%;
   height: 12rem;
+  position: relative;
   border-radius: var(--border-radius) !important;
   -webkit-border-radius: var(--border-radius) !important;
   -moz-border-radius: var(--border-radius) !important;
   overflow: hidden;
+}
+
+.room-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 @media (min-width: 1024px) {
@@ -1919,5 +1935,121 @@ body.dark .error-subtitle {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ===================================================
+   IMAGE SKELETON / LOADER STYLES
+   =================================================== */
+.img-skeleton-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+.img-skeleton-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmerEffectRooms 1.5s infinite linear;
+}
+
+@keyframes shimmerEffectRooms {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.img-loader-spinner {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.75rem;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.img-spinner-circle {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(14, 165, 233, 0.2);
+  border-top-color: #0ea5e9;
+  border-radius: 50%;
+  animation: spinImageLoaderRooms 0.8s infinite linear;
+}
+
+.img-spinner-circle.sm {
+  width: 26px;
+  height: 26px;
+  border-width: 2.5px;
+}
+
+@keyframes spinImageLoaderRooms {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.img-loader-text {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: 0.01em;
+}
+
+.img-oculta {
+  opacity: 0 !important;
+}
+
+.img-visible {
+  opacity: 1 !important;
+  transition: opacity 0.4s ease-in-out !important;
+}
+
+body.dark .img-skeleton-loader {
+  background: #1e293b;
+}
+
+body.dark .img-skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+body.dark .img-loader-spinner {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+body.dark .img-loader-text {
+  color: #f1f5f9;
 }
 

@@ -19,6 +19,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   constructor(private navbarStateService: NavbarStateService) {}
 
   ngOnInit(): void {
+    console.log('>>> AdminComponent: ngOnInit called');
     this.subscription = this.navbarStateService.collapsed$.subscribe((collapsed) => {
       this.isCollapsed = collapsed;
     });

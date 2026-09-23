@@ -4,8 +4,10 @@ import com.example.back.dto.booking.BookingDTO;
 import com.example.back.dto.booking.CreateBookingDTO;
 import com.example.back.models.booking.Booking;
 import com.example.back.models.payment.Payment;
+import com.example.back.models.user.User;
 import com.example.back.services.interfaces.BookingService;
 import com.example.back.services.interfaces.PaymentService;
+import com.example.back.services.interfaces.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class BookingController {
 
     @Autowired
     private PaymentService pagoService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping("/habitacion/{idHabitacion}/fechas-reservadas")
     public ResponseEntity<List<Object[]>> getFechasReservadas(@PathVariable Integer idHabitacion) {
@@ -69,17 +74,28 @@ public class BookingController {
     @GetMapping("/{idReserva}/comprobante")
     public ResponseEntity<byte[]> descargarComprobante(@PathVariable Integer idReserva) {
         try {
+            User usuarioActual = securityService.getAuthenticatedUser();
             Booking reserva = reservaService.getReservaPorId(idReserva);
-            if (reserva.getPagos() == null || reserva.getPagos().isEmpty()) {
+
+            boolean esAdmin = usuarioActual != null && usuarioActual.getRoles() != null && usuarioActual.getRoles().stream()
+                    .anyMatch(r -> "ROLE_ADMIN".equals(r.getName()) || "ROLE_SUPERADMIN".equals(r.getName()));
+
+            if (usuarioActual != null && !esAdmin && reserva.getUsuario() != null &&
+                    !reserva.getUsuario().getIdUsuario().equals(usuarioActual.getIdUsuario())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+
+            byte[] pdfBytes = pagoService.generarComprobantePorReserva(idReserva);
+            if (pdfBytes == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            Payment pago = reserva.getPagos().get(0);
-            byte[] pdfBytes = pagoService.generarComprobantePdf(pago);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", "comprobante_reserva_" + idReserva + ".pdf");
             return ResponseEntity.ok().headers(headers).body(pdfBytes);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

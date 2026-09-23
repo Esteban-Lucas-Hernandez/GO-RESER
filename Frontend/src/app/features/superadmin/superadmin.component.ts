@@ -19,6 +19,7 @@ export class SuperAdminContainerComponent implements OnInit, OnDestroy {
   constructor(private navbarStateService: NavbarStateService) {}
 
   ngOnInit(): void {
+    console.log('>>> SuperAdminContainerComponent: ngOnInit called');
     this.subscription = this.navbarStateService.collapsed$.subscribe((collapsed) => {
       this.isCollapsed = collapsed;
     });

@@ -58,8 +58,8 @@
                   <div
                     *ngFor="let categoria of categorias; let i = index"
                     class="slice"
-                    [style.background]="getCategoriaColor(i)"
-                    [style.clipPath]="getPieSliceClip(i, categorias.length)"
+                    [style.background]="categoria.color"
+                    [style.clipPath]="categoria.clipPath"
                   ></div>
                   <div class="pie-center-circle"></div>
                 </div>
@@ -76,7 +76,7 @@
                     let i = index
                   "
                 >
-                  <div class="legend-color" [style.background]="getCategoriaColor(i)"></div>
+                  <div class="legend-color" [style.background]="categoria.color"></div>
                   <div class="legend-text">
                     <span class="legend-label">{{ categoria.nombre }}</span>
                   </div>
@@ -112,8 +112,8 @@
                   <div class="bar-wrapper" *ngFor="let resena of ultimasResenas; let i = index">
                     <div
                       class="bar"
-                      [style.height]="resena.calificacion * 34 + 'px'"
-                      [style.background]="getBarColor(resena.calificacion)"
+                      [style.height]="resena.barHeight + 'px'"
+                      [style.background]="resena.barColor"
                     >
                       <div class="bar-value">{{ resena.calificacion }}</div>
                     </div>

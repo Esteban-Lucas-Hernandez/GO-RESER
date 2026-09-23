@@ -56,11 +56,9 @@
               <div class="hotel-info">
                 <h3 class="hotel-name">{{ hotel.nombre | slice:0:20 }}{{ hotel.nombre.length > 20 ? '...' : '' }}</h3>
 
-                <div class="hotel-location" (click)="buscarEnGoogle(hotel)">
+                <div class="hotel-location" (click)="buscarEnGoogle(hotel)" [title]="getLocationText(hotel)">
                   <i class="fas fa-map-marker-alt location-icon"></i>
-                  <span class="location-text"
-                    >{{ (getCiudadNombre(hotel) + ', ' + getDepartamentoNombre(hotel)) | slice:0:20 }}{{ (getCiudadNombre(hotel) + ', ' + getDepartamentoNombre(hotel)).length > 30 ? '...' : '' }}</span
-                  >
+                  <span class="location-text">{{ getLocationText(hotel) }}</span>
                 </div>
 
                 <div class="hotel-rating">

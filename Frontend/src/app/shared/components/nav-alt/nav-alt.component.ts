@@ -174,20 +174,11 @@ export class Nav1Component implements OnInit {
     // Actualizar el estado de autenticación
     this.isAuthenticated = true;
 
-    // Cargar la información completa del perfil
-    this.loadUserProfile();
-
-    // Verificar el rol del usuario y redirigir según corresponda
-    setTimeout(() => {
-      const userRole = this.authService.getUserRole();
-      if (userRole === 'ROLE_ADMIN') {
-        // Redirigir a la página de administración
-        this.router.navigate(['/admin/dashboard']);
-      } else if (userRole === 'ROLE_SUPERADMIN') {
-        // Redirigir a la página de superadministración
-        this.router.navigate(['/superadmin/usuarios']);
-      }
-    }, 100);
+    // Solo cargar perfil si es usuario común que permanece en la vista pública
+    const userRole = this.authService.getUserRole();
+    if (userRole !== 'ROLE_ADMIN' && userRole !== 'ROLE_SUPERADMIN') {
+      this.loadUserProfile();
+    }
   }
 
   onRegistroSuccess(event: any) {

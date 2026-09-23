@@ -30,9 +30,15 @@ public class PaymentController {
     @PostMapping("/confirmar/{idReserva}/pdf")
     public ResponseEntity<byte[]> confirmarPagoYGenerarPdf(@PathVariable Integer idReserva) {
         try {
-            pagoService.confirmarPago(idReserva);
             Booking reserva = reservaService.getReservaPorId(idReserva);
-            Payment pago = reserva.getPagos().get(reserva.getPagos().size() - 1);
+            Payment pago;
+            if (reserva.getEstado() == Booking.EstadoReserva.confirmada && reserva.getPagos() != null && !reserva.getPagos().isEmpty()) {
+                pago = reserva.getPagos().get(reserva.getPagos().size() - 1);
+            } else {
+                pagoService.confirmarPago(idReserva);
+                reserva = reservaService.getReservaPorId(idReserva);
+                pago = reserva.getPagos().get(reserva.getPagos().size() - 1);
+            }
             byte[] pdfBytes = pagoService.generarComprobantePdf(pago);
 
             HttpHeaders headers = new HttpHeaders();

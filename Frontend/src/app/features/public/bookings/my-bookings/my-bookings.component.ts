@@ -164,8 +164,18 @@ export class MisReservasComponent implements OnInit {
 
   // Método para descargar el comprobante de una reserva
   descargarComprobante(idReserva: number): void {
+    Swal.fire({
+      title: 'Generando comprobante...',
+      text: 'Por favor espere un momento',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     this.hotelService.getComprobanteReserva(idReserva).subscribe({
       next: (blob: Blob) => {
+        Swal.close();
         // Crear un enlace temporal para descargar el archivo
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -177,8 +187,17 @@ export class MisReservasComponent implements OnInit {
         // Limpiar el objeto URL después de la descarga
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Comprobante descargado correctamente',
+          showConfirmButton: false,
+          timer: 2000,
+        });
       },
       error: (err: any) => {
+        Swal.close();
         Swal.fire({
           position: 'top-end',
           icon: 'error',

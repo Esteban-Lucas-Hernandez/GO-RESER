@@ -210,7 +210,11 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   // Get department name for hotel
   getDepartamentoNombre(hotel: Hotel): string {
-    return hotel.ciudad?.departamento?.nombre || 'No especificado';
+    return (
+      hotel.ciudad?.departamentoNombre ||
+      hotel.ciudad?.departamento?.nombre ||
+      ''
+    );
   }
 
   // Navigate to hotels section

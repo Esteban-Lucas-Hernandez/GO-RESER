@@ -29,25 +29,44 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    console.log('📝 [LOGIN COMPONENT] onSubmit ejecutado. Formulario válido:', this.loginForm.valid);
+
     if (this.loginForm.valid) {
       const formData: LoginData = this.loginForm.value;
+      console.log('📤 [LOGIN COMPONENT] Enviando credenciales para email:', formData.email);
 
       this.authService.login(formData).subscribe({
         next: (response: AuthResponse) => {
+          console.log('📥 [LOGIN COMPONENT] Respuesta recibida en LoginComponent:', response);
+
           if (response && response.token && response.success !== false) {
+            console.log('📢 [LOGIN COMPONENT] Emitiendo evento loginSuccess...');
             this.loginSuccess.emit(response);
 
             const userRole = this.authService.getUserRole();
+            console.log('👤 [LOGIN COMPONENT] Rol del usuario obtenido:', userRole);
+
+            let targetRoute = '/public';
             if (userRole === 'ROLE_SUPERADMIN') {
-              this.router.navigate(['/superadmin']);
+              targetRoute = '/superadmin/usuarios';
             } else if (userRole === 'ROLE_ADMIN') {
-              this.router.navigate(['/admin/panel']);
-            } else {
-              this.router.navigate(['/public']);
+              targetRoute = '/admin/panel';
             }
+
+            console.log(`🚀 [LOGIN COMPONENT] Iniciando redirección a: ${targetRoute}`);
+            this.router.navigate([targetRoute]).then((success) => {
+              if (success) {
+                console.log(`✅ [LOGIN COMPONENT] Redirección exitosa a ${targetRoute}`);
+              } else {
+                console.error(`❌ [LOGIN COMPONENT] Redirección a ${targetRoute} fue CANCELADA o RECHAZADA (posible Guard o condición de ruta).`);
+              }
+            }).catch((err) => {
+              console.error(`💥 [LOGIN COMPONENT] Error en navegación hacia ${targetRoute}:`, err);
+            });
           } else {
             const errorMessage =
               response?.message || 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
+            console.warn('⚠️ [LOGIN COMPONENT] Login no exitoso:', errorMessage, response);
             Swal.fire({
               position: 'top-end',
               icon: 'error',
@@ -58,6 +77,7 @@ export class LoginComponent {
           }
         },
         error: (error: any) => {
+          console.error('💥 [LOGIN COMPONENT] Error capturado en subscripción de login:', error);
           const errorMessage =
             error?.error?.message ||
             'Error en el servidor. Por favor, inténtelo de nuevo más tarde.';
@@ -71,6 +91,7 @@ export class LoginComponent {
         },
       });
     } else {
+      console.warn('⚠️ [LOGIN COMPONENT] Intento de submit con formulario inválido:', this.loginForm.value);
       Object.keys(this.loginForm.controls).forEach((key) => {
         const control = this.loginForm.get(key);
         control?.markAsTouched();

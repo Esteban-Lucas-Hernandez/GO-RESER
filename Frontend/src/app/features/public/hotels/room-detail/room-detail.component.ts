@@ -754,6 +754,11 @@ export class DetalleHabitacionComponent implements OnInit, AfterViewInit {
     // Prevenir el envío del formulario por defecto
     event.preventDefault();
 
+    // Si se seleccionaron fechas en el calendario pero no se dio clic en "Aplicar", confirmarlas automáticamente
+    if ((!this.reserva.fechaInicio || !this.reserva.fechaFin) && (this.fechaInicio && this.fechaFin)) {
+      this.confirmarSeleccionFechas();
+    }
+
     // Validación 1: Campos requeridos
     if (!this.reserva.fechaInicio || !this.reserva.fechaFin || !this.reserva.metodoPago) {
       this.mostrarMensaje('Por favor complete todos los campos', 'error');
@@ -863,6 +868,8 @@ export class DetalleHabitacionComponent implements OnInit, AfterViewInit {
           // Intentar obtener el mensaje de error específico del backend
           if (error.error && typeof error.error === 'string') {
             mensaje = error.error;
+          } else if (error.error && error.error.error) {
+            mensaje = error.error.error;
           } else if (error.error && error.error.message) {
             mensaje = error.error.message;
           } else {
@@ -947,11 +954,20 @@ export class DetalleHabitacionComponent implements OnInit, AfterViewInit {
             'exito'
           );
         } else {
-          // Si no es un PDF, leer el contenido para ver qué es
+          // Si no es un PDF directamente, verificar si es un JSON de confirmación exitosa
           const reader = new FileReader();
           reader.onload = () => {
             console.log('Contenido de la respuesta:', reader.result);
-            this.mostrarMensajePago('Error: La respuesta no es un PDF válido', 'error');
+            try {
+              const resJson = JSON.parse(reader.result as string);
+              if (resJson && (resJson.idPago || resJson.referenciaPago)) {
+                this.mostrarMensajePago('¡Pago confirmado exitosamente!', 'exito');
+              } else {
+                this.mostrarMensajePago('Error: La respuesta no es un comprobante válido', 'error');
+              }
+            } catch (e) {
+              this.mostrarMensajePago('Error: La respuesta no es un PDF válido', 'error');
+            }
           };
           reader.readAsText(response);
         }
@@ -996,6 +1012,25 @@ export class DetalleHabitacionComponent implements OnInit, AfterViewInit {
       this.mensajePago = null;
       this.tipoMensajePago = null;
     }, 3000);
+  }
+
+  // Control de estado de carga de imágenes
+  imagenesCargadas: { [url: string]: boolean } = {};
+
+  onImagenCargada(url: string | null | undefined): void {
+    if (url) {
+      this.imagenesCargadas[url] = true;
+    }
+  }
+
+  esImagenCargada(url: string | null | undefined): boolean {
+    return url ? !!this.imagenesCargadas[url] : false;
+  }
+
+  onImagenError(url: string | null | undefined): void {
+    if (url) {
+      this.imagenesCargadas[url] = true; // Remueve el loader en caso de error
+    }
   }
 
   // Método para cambiar la imagen principal

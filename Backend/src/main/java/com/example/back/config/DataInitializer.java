@@ -2,6 +2,10 @@ package com.example.back.config;
 
 import com.example.back.models.user.Role;
 import com.example.back.models.user.User;
+import com.example.back.models.booking.Booking;
+import com.example.back.models.payment.Payment;
+import com.example.back.repo.booking.BookingRepository;
+import com.example.back.repo.payment.PaymentRepository;
 import com.example.back.repo.user.RoleRepository;
 import com.example.back.repo.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -9,7 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Configuration
 public class DataInitializer {
@@ -17,11 +24,17 @@ public class DataInitializer {
     private final RoleRepository roleRepository;
     private final UserRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BookingRepository reservaRepository;
+    private final PaymentRepository pagoRepository;
 
-    public DataInitializer(RoleRepository roleRepository, UserRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(RoleRepository roleRepository, UserRepository usuarioRepository, 
+                           PasswordEncoder passwordEncoder, BookingRepository reservaRepository, 
+                           PaymentRepository pagoRepository) {
         this.roleRepository = roleRepository;
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.reservaRepository = reservaRepository;
+        this.pagoRepository = pagoRepository;
     }
 
     @Bean
@@ -70,6 +83,26 @@ public class DataInitializer {
                 cliente.setRoles(Set.of(roleUser));
                 usuarioRepository.save(cliente);
                 System.out.println("✅ CLIENTE creado (ID 3): cliente@gmail.com / 123456");
+            }
+
+            // Sincronizar pagos para el 100% de las reservas existentes que no tengan pago
+            List<Booking> todasLasReservas = reservaRepository.findAll();
+            for (Booking r : todasLasReservas) {
+                List<Payment> pagos = pagoRepository.findByReservaIdReserva(r.getIdReserva());
+                if (pagos == null || pagos.isEmpty()) {
+                    Payment pago = new Payment();
+                    pago.setReserva(r);
+                    pago.setMonto(r.getTotal() != null ? r.getTotal() : 0.0);
+                    pago.setFechaPago(r.getFechaReserva() != null ? r.getFechaReserva() : LocalDateTime.now());
+                    pago.setReferenciaPago("PAY-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+                    try {
+                        pago.setMetodo(Payment.MetodoPago.valueOf(r.getMetodoPago() != null ? r.getMetodoPago().name() : "tarjeta"));
+                    } catch (Exception e) {
+                        pago.setMetodo(Payment.MetodoPago.tarjeta);
+                    }
+                    pagoRepository.save(pago);
+                    System.out.println("✅ Pago sincronizado para reserva ID " + r.getIdReserva());
+                }
             }
         };
     }

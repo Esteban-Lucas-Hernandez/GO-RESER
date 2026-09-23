@@ -9,7 +9,7 @@
   </button>
 
   <ul>
-    <li *ngFor="let item of menuItems">
+    <li *ngFor="let item of menuItems; trackBy: trackByRoute">
       <a [routerLink]="item.route" routerLinkActive="active">
         <fa-icon [icon]="item.icon" class="menu-icon"></fa-icon>
         <span class="menu-text" [class.hidden]="isCollapsed">{{ item.name }}</span>

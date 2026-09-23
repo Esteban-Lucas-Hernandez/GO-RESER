@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -60,12 +61,31 @@ public class SecurityConfig {
                     "/swagger-ui/**"
                 ).permitAll();
 
-                auth.requestMatchers("/user/**").hasRole("USER");
+                // Permitir consulta pública de fechas reservadas para el calendario
+                auth.requestMatchers("/user/reservas/habitacion/*/fechas-reservadas").permitAll();
+
+                auth.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN", "SUPERADMIN");
                 auth.requestMatchers("/admin/**").hasAnyRole("ADMIN");
                 auth.requestMatchers("/superadmin/**").hasRole("SUPERADMIN");
 
                 auth.anyRequest().authenticated();
             })
+            .exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint((request, response, authException) -> {
+                    logger.error("⛔ [SECURITY 401 UNAUTHORIZED] Intento no autorizado en URI: {} - Error: {}", 
+                            request.getRequestURI(), authException.getMessage());
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("{\"status\": 401, \"error\": \"Unauthorized\", \"message\": \"No autorizado. Inicie sesión para continuar.\"}");
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    logger.error("⛔ [SECURITY 403 FORBIDDEN] Acceso denegado (falta de rol/permiso) en URI: {} - Error: {}", 
+                            request.getRequestURI(), accessDeniedException.getMessage());
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("{\"status\": 403, \"error\": \"Forbidden\", \"message\": \"No tiene permisos suficientes para acceder a este recurso.\"}");
+                })
+            )
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(customOAuth2SuccessHandler)
                 .failureUrl("/auth/google/failure")

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -21,7 +22,7 @@ interface IngresosPorDia {
 @Component({
   selector: 'app-ingresos',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, BaseChartDirective],
+  imports: [CommonModule, BaseChartDirective],
   templateUrl: './revenue.component.html',
   styleUrls: ['./revenue.component.css'],
 })
@@ -30,6 +31,7 @@ export class IngresosComponent implements OnInit {
 
   totalIngresos: number = 0;
   totalReservas: number = 0;
+  hotelesActivosCount: number = 0;
 
   // Datos para el gráfico
   public lineChartLabels: string[] = [];
@@ -41,12 +43,7 @@ export class IngresosComponent implements OnInit {
         data: [],
         fill: true,
         tension: 0.4,
-        backgroundColor: (context) => {
-          const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, context.chart.height);
-          gradient.addColorStop(0, 'rgba(0, 128, 255, 0.8)'); // Azul #0080ff con opacidad
-          gradient.addColorStop(1, 'rgba(255, 255, 255, 0.2)'); // Blanco con opacidad
-          return gradient;
-        },
+        backgroundColor: 'rgba(0, 128, 255, 0.25)',
         borderColor: '#0080ff', // Azul #0080ff para el borde
         pointBackgroundColor: 'rgba(0, 128, 255, 1)',
         pointBorderColor: '#fff',
@@ -93,7 +90,11 @@ export class IngresosComponent implements OnInit {
   // Datos detallados por día y hotel
   ingresosDetallados: Record<string, IngresosPorDia> = {};
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -101,8 +102,9 @@ export class IngresosComponent implements OnInit {
 
   cargarDatos() {
     const token = this.authService.getToken();
+    console.log('📈 [INGRESOS COMPONENT] cargarDatos() ejecutado. Token presente:', !!token);
     if (!token) {
-      console.error('No se encontró el token de autenticación');
+      console.error('❌ [INGRESOS COMPONENT] No se encontró el token de autenticación');
       return;
     }
 
@@ -110,23 +112,27 @@ export class IngresosComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
+    console.log('📈 [INGRESOS COMPONENT] Petición GET a:', this.API_URL);
     this.http.get<Reserva[]>(this.API_URL, { headers }).subscribe({
       next: (reservas: Reserva[]) => {
+        console.log('✅ [INGRESOS COMPONENT] Reservas recibidas:', reservas?.length);
         // Filtrar solo las reservas confirmadas
-        const reservasConfirmadas = reservas.filter(
+        const reservasConfirmadas = (reservas || []).filter(
           (reserva) => reserva.estado && reserva.estado.toUpperCase() === 'CONFIRMADA'
         );
 
         // KPI
         this.totalIngresos = reservasConfirmadas.reduce((sum, r) => sum + r.total, 0);
         this.totalReservas = reservasConfirmadas.length;
+        console.log('📈 [INGRESOS COMPONENT] Total ingresos calculados:', this.totalIngresos, 'Total reservas:', this.totalReservas);
 
         // Agrupar ingresos por fecha
         const ingresosPorFecha: Record<string, number> = {};
         this.ingresosDetallados = {};
+        const uniqueHoteles = new Set<string>();
 
         reservasConfirmadas.forEach((reserva) => {
-          const fecha = reserva.fechaReserva.split('T')[0];
+          const fecha = reserva.fechaReserva ? reserva.fechaReserva.split('T')[0] : 'Sin fecha';
 
           // Acumular total por fecha
           ingresosPorFecha[fecha] = (ingresosPorFecha[fecha] || 0) + reserva.total;
@@ -141,45 +147,41 @@ export class IngresosComponent implements OnInit {
 
           this.ingresosDetallados[fecha].total += reserva.total;
 
-          if (!this.ingresosDetallados[fecha].hoteles[reserva.nombreHotel]) {
-            this.ingresosDetallados[fecha].hoteles[reserva.nombreHotel] = 0;
+          if (reserva.nombreHotel) {
+            uniqueHoteles.add(reserva.nombreHotel);
+            if (!this.ingresosDetallados[fecha].hoteles[reserva.nombreHotel]) {
+              this.ingresosDetallados[fecha].hoteles[reserva.nombreHotel] = 0;
+            }
+            this.ingresosDetallados[fecha].hoteles[reserva.nombreHotel] += reserva.total;
           }
-
-          this.ingresosDetallados[fecha].hoteles[reserva.nombreHotel] += reserva.total;
         });
 
+        this.hotelesActivosCount = uniqueHoteles.size;
         this.lineChartLabels = Object.keys(ingresosPorFecha);
-        this.lineChartData.labels = this.lineChartLabels;
-        this.lineChartData.datasets[0].data = Object.values(ingresosPorFecha);
+        this.lineChartData = {
+          labels: this.lineChartLabels,
+          datasets: [
+            {
+              ...this.lineChartData.datasets[0],
+              data: Object.values(ingresosPorFecha),
+            },
+          ],
+        };
+        console.log('✅ [INGRESOS COMPONENT] Gráfico de ingresos actualizado exitosamente.');
       },
       error: (error: any) => {
-        console.error('Error al cargar datos de reservas:', error);
+        console.error('❌ [INGRESOS COMPONENT] Error al cargar datos de reservas:', error);
         if (error.status === 401) {
-          console.error('No autorizado: Verifique que el token sea válido');
+          console.error('⛔ [INGRESOS COMPONENT] No autorizado: Verifique que el token sea válido');
         } else if (error.status === 403) {
-          console.error('Acceso prohibido: El usuario no tiene permisos suficientes');
+          console.error('⛔ [INGRESOS COMPONENT] Acceso prohibido: El usuario no tiene permisos suficientes');
         }
       },
     });
   }
 
-  // Método para obtener el número de hoteles activos
-  getHotelesActivosCount(): number {
-    const hotelesSet = new Set<string>();
-
-    // Recorrer todos los días y recolectar nombres de hoteles únicos
-    Object.values(this.ingresosDetallados).forEach((dia) => {
-      Object.keys(dia.hoteles).forEach((hotel) => {
-        hotelesSet.add(hotel);
-      });
-    });
-
-    return hotelesSet.size;
-  }
-
   // Método para redirigir a la página de reservas
   verTodasLasReservas() {
-    // Redirigir a la página de reservas
-    window.location.href = '/admin/reservas';
+    this.router.navigate(['/admin/reservas']);
   }
 }

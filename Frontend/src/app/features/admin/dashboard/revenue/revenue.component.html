@@ -16,14 +16,15 @@
 </div>
 
 <section class="chart-container">
-  <canvas
-    baseChart
-    [data]="lineChartData"
-    [labels]="lineChartLabels"
-    [options]="lineChartOptions"
-    [type]="'line'"
-  >
-  </canvas>
+  <div class="chart-wrapper">
+    <canvas
+      baseChart
+      [data]="lineChartData"
+      [options]="lineChartOptions"
+      [type]="'line'"
+    >
+    </canvas>
+  </div>
 </section>
 <section class="cards">
   <div class="card">
@@ -67,7 +68,7 @@
       Hoteles Activos
     </h3>
     <p style="font-family: Arial, sans-serif; font-size: 1.1rem; font-weight: 700; color: #3498db">
-      {{ getHotelesActivosCount() }}
+      {{ hotelesActivosCount }}
     </p>
   </div>
 </section>

@@ -48,17 +48,17 @@ public class AdminBookingsController {
     @GetMapping(value = "/{idReserva}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> descargarPdf(@PathVariable Integer idReserva) {
         try {
-            Booking reserva = reservaService.getReservaPorId(idReserva);
-            if (reserva.getPagos() == null || reserva.getPagos().isEmpty()) {
+            byte[] pdfBytes = pagoService.generarComprobantePorReserva(idReserva);
+            if (pdfBytes == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            Payment pago = reserva.getPagos().get(0);
-            byte[] pdfBytes = pagoService.generarComprobantePdf(pago);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", "reserva_" + idReserva + ".pdf");
             return ResponseEntity.ok().headers(headers).body(pdfBytes);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

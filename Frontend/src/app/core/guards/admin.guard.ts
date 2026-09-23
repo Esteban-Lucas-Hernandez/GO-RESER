@@ -9,31 +9,33 @@ export class AdminGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    // Verificar si el usuario está autenticado
-    if (this.authService.isAuthenticated()) {
-      // Obtener el rol del usuario
-      const userRole = this.authService.getUserRole();
-      console.log('AdminGuard - Rol del usuario:', userRole);
+    console.log('🛡️ [ADMIN GUARD] Evaluando canActivate()...');
 
-      // Verificar si el usuario tiene rol de administrador
+    if (this.authService.isAuthenticated()) {
+      const userRole = this.authService.getUserRole();
+      console.log('🛡️ [ADMIN GUARD] Usuario autenticado. Rol detectado:', userRole);
+
       if (userRole === 'ROLE_ADMIN') {
-        console.log('AdminGuard - Acceso permitido');
-        return true; // Permitir el acceso
+        console.log('✅ [ADMIN GUARD] Acceso permitido a ruta de administrador.');
+        return true;
       } else if (userRole === 'ROLE_SUPERADMIN') {
-        // Redirigir a la página de superadmin si es superadmin
-        console.log('AdminGuard - Es superadmin, redirigiendo a /superadmin');
-        this.router.navigate(['/superadmin']);
+        console.warn('⚠️ [ADMIN GUARD] Rol es ROLE_SUPERADMIN. Redirigiendo a /superadmin...');
+        this.router.navigate(['/superadmin']).then((success) => {
+          console.log('🧭 [ADMIN GUARD] Redirección a /superadmin resultado:', success);
+        });
         return false;
       } else {
-        // Redirigir a la página principal si es usuario normal
-        console.log('AdminGuard - Es usuario normal, redirigiendo a /public');
-        this.router.navigate(['/public']);
+        console.error('⛔ [ADMIN GUARD] Acceso DENEGADO. Rol del usuario no es admin:', userRole, 'Redirigiendo a /public...');
+        this.router.navigate(['/public']).then((success) => {
+          console.log('🧭 [ADMIN GUARD] Redirección a /public resultado:', success);
+        });
         return false;
       }
     } else {
-      // Redirigir a la página de login si no está autenticado
-      console.log('AdminGuard - Usuario no autenticado, redirigiendo a /login');
-      this.router.navigate(['/login']);
+      console.error('⛔ [ADMIN GUARD] Usuario no autenticado (no hay token válido). Redirigiendo a /login...');
+      this.router.navigate(['/login']).then((success) => {
+        console.log('🧭 [ADMIN GUARD] Redirección a /login resultado:', success);
+      });
       return false;
     }
   }

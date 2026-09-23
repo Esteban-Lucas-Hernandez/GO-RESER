@@ -64,26 +64,71 @@
           *ngIf="habitacion.imagenesUrls && habitacion.imagenesUrls.length > 0"
         >
           <div class="imagen-principal">
+            <!-- Loader elegante para imagen principal -->
+            <div
+              class="img-skeleton-loader"
+              *ngIf="!esImagenCargada(imagenPrincipal || habitacion.imagenesUrls[0])"
+            >
+              <div class="img-skeleton-shimmer"></div>
+              <div class="img-loader-spinner">
+                <div class="img-spinner-circle"></div>
+                <span class="img-loader-text">Cargando foto...</span>
+              </div>
+            </div>
+
             <img
               [src]="imagenPrincipal || habitacion.imagenesUrls[0]"
               [alt]="'Habitación ' + habitacion.numero"
+              [class.img-visible]="esImagenCargada(imagenPrincipal || habitacion.imagenesUrls[0])"
+              [class.img-oculta]="!esImagenCargada(imagenPrincipal || habitacion.imagenesUrls[0])"
+              (load)="onImagenCargada(imagenPrincipal || habitacion.imagenesUrls[0])"
+              (error)="onImagenError(imagenPrincipal || habitacion.imagenesUrls[0])"
             />
           </div>
+
           <div class="imagenes-miniaturas">
-            <img
+            <div
               *ngFor="let imagenUrl of habitacion.imagenesUrls | slice : 0 : 2; let i = index"
-              [src]="imagenUrl"
-              [alt]="'Imagen ' + (i + 1) + ' de habitación ' + habitacion.numero"
+              class="miniatura-wrapper"
               (click)="cambiarImagenPrincipal(imagenUrl)"
-            />
+            >
+              <!-- Loader para miniatura -->
+              <div class="img-skeleton-loader miniatura-skeleton" *ngIf="!esImagenCargada(imagenUrl)">
+                <div class="img-skeleton-shimmer"></div>
+                <div class="img-spinner-circle sm"></div>
+              </div>
+
+              <img
+                [src]="imagenUrl"
+                [alt]="'Imagen ' + (i + 1) + ' de habitación ' + habitacion.numero"
+                [class.img-visible]="esImagenCargada(imagenUrl)"
+                [class.img-oculta]="!esImagenCargada(imagenUrl)"
+                (load)="onImagenCargada(imagenUrl)"
+                (error)="onImagenError(imagenUrl)"
+              />
+            </div>
+
             <div
               class="ver-mas-container"
               *ngIf="habitacion.imagenesUrls.length > 2"
               (click)="abrirModal()"
             >
+              <!-- Loader para miniatura de ver más -->
+              <div
+                class="img-skeleton-loader miniatura-skeleton"
+                *ngIf="!esImagenCargada(habitacion.imagenesUrls[2])"
+              >
+                <div class="img-skeleton-shimmer"></div>
+                <div class="img-spinner-circle sm"></div>
+              </div>
+
               <img
                 [src]="habitacion.imagenesUrls[2]"
                 [alt]="'Imagen 3 de habitación ' + habitacion.numero"
+                [class.img-visible]="esImagenCargada(habitacion.imagenesUrls[2])"
+                [class.img-oculta]="!esImagenCargada(habitacion.imagenesUrls[2])"
+                (load)="onImagenCargada(habitacion.imagenesUrls[2])"
+                (error)="onImagenError(habitacion.imagenesUrls[2])"
               />
               <div class="overlay">
                 <span class="ver-mas-text">+{{ habitacion.imagenesUrls.length - 2 }}</span>
@@ -139,7 +184,23 @@
         <div class="modal-contenido">
           <span class="cerrar-modal" (click)="cerrarModal($event)">&times;</span>
           <div class="modal-imagen-principal">
-            <img [src]="imagenModal" [alt]="'Imagen ampliada'" />
+            <!-- Loader para imagen modal -->
+            <div class="img-skeleton-loader" *ngIf="!esImagenCargada(imagenModal)">
+              <div class="img-skeleton-shimmer"></div>
+              <div class="img-loader-spinner">
+                <div class="img-spinner-circle"></div>
+                <span class="img-loader-text">Cargando foto...</span>
+              </div>
+            </div>
+
+            <img
+              [src]="imagenModal"
+              [alt]="'Imagen ampliada'"
+              [class.img-visible]="esImagenCargada(imagenModal)"
+              [class.img-oculta]="!esImagenCargada(imagenModal)"
+              (load)="onImagenCargada(imagenModal)"
+              (error)="onImagenError(imagenModal)"
+            />
             <button class="nav-btn prev" (click)="imagenAnterior()">&#10094;</button>
             <button class="nav-btn next" (click)="imagenSiguiente()">&#10095;</button>
           </div>

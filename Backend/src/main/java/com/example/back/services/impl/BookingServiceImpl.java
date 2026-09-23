@@ -12,6 +12,8 @@ import com.example.back.repo.hotel.HotelRepository;
 import com.example.back.repo.room.RoomRepository;
 import com.example.back.services.interfaces.BookingService;
 import com.example.back.services.interfaces.SecurityService;
+import com.example.back.models.payment.Payment;
+import com.example.back.repo.payment.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +39,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    private PaymentRepository pagoRepository;
 
     private final BookingMapper reservaMapper = BookingMapper.INSTANCE;
 
@@ -153,6 +159,23 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
         reserva.setEstado(Booking.EstadoReserva.confirmada);
         Booking guardada = reservaRepository.save(reserva);
+
+        // Asegurar que exista el registro de pago para la reserva confirmada
+        List<Payment> pagos = pagoRepository.findByReservaIdReserva(idReserva);
+        if (pagos == null || pagos.isEmpty()) {
+            Payment pago = new Payment();
+            pago.setReserva(guardada);
+            pago.setMonto(guardada.getTotal() != null ? guardada.getTotal() : 0.0);
+            pago.setFechaPago(LocalDateTime.now());
+            pago.setReferenciaPago("PAY-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+            try {
+                pago.setMetodo(Payment.MetodoPago.valueOf(guardada.getMetodoPago() != null ? guardada.getMetodoPago().name() : "tarjeta"));
+            } catch (Exception e) {
+                pago.setMetodo(Payment.MetodoPago.tarjeta);
+            }
+            pagoRepository.save(pago);
+        }
+
         return reservaMapper.reservaToReservaDTO(guardada);
     }
 

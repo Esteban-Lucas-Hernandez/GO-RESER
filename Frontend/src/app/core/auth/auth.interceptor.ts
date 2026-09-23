@@ -1,22 +1,32 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AuthService } from './auth.service';
+import { tap } from 'rxjs/operators';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  // Obtener el token de autenticación
   const token = authService.getToken();
+  console.log(`🌐 [HTTP INTERCEPTOR] Enviando ${req.method} ${req.url} (Token presente: ${!!token})`);
 
-  // Si hay un token, clonar la solicitud y añadir el header de autorización
+  let authReq = req;
   if (token) {
-    const authReq = req.clone({
+    authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return next(authReq);
   }
 
-  // Si no hay token, continuar con la solicitud original
-  return next(req);
+  return next(authReq).pipe(
+    tap({
+      next: (event) => {
+        if (event instanceof HttpResponse) {
+          console.log(`📥 [HTTP INTERCEPTOR] Respuesta HTTP ${event.status} de ${req.method} ${req.url}`);
+        }
+      },
+      error: (error) => {
+        console.error(`💥 [HTTP INTERCEPTOR] Error HTTP ${error.status || 'desconocido'} en ${req.method} ${req.url}:`, error);
+      },
+    })
+  );
 };

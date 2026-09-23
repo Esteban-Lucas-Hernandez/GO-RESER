@@ -10,6 +10,7 @@ import com.example.back.models.hotel.Hotel;
 import com.example.back.models.room.Room;
 import com.example.back.repo.hotel.HotelRepository;
 import com.example.back.repo.room.RoomRepository;
+import com.example.back.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,14 @@ public class HotelPublicController {
         List<Hotel> hoteles = hotelRepository.findAll();
         List<HotelPublicDTO> hotelesDTO = hotelPublicMapper.hotelsToHotelPublicDTOs(hoteles);
         return ResponseEntity.ok(hotelesDTO);
+    }
+
+    @GetMapping("/hoteles/{idHotel}")
+    public ResponseEntity<HotelPublicDTO> getHotelPublicoPorId(@PathVariable Integer idHotel) {
+        Hotel hotel = hotelRepository.findById(idHotel)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel no encontrado con ID: " + idHotel));
+        HotelPublicDTO hotelDTO = hotelPublicMapper.hotelToHotelPublicDTO(hotel);
+        return ResponseEntity.ok(hotelDTO);
     }
 
     @GetMapping("/hoteles/{idHotel}/habitaciones")

@@ -17,7 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer>, JpaS
     
     @Query("SELECT COUNT(r) > 0 FROM Booking r WHERE r.habitacion = :habitacion " +
            "AND r.estado = 'confirmada' " +
-           "AND ((r.fechaInicio <= :fin AND r.fechaFin >= :inicio))")
+           "AND (r.fechaInicio < :fin AND r.fechaFin > :inicio)")
     boolean existsSolapadas(@Param("habitacion") Room habitacion,
                            @Param("inicio") LocalDate inicio,
                            @Param("fin") LocalDate fin);

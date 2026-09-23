@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule, DatePipe, SlicePipe, NgStyle } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ResenaService } from '../reviews/review.service';
 import { Resena } from '../reviews/review.interface';
@@ -19,13 +19,12 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./dashboard.component.css'],
   providers: [DatePipe],
 })
-export class PanelComponent implements OnInit, OnDestroy {
+export class PanelComponent implements OnInit {
   panelData: any = null;
   userInfo: any = null;
-  ultimasResenas: Resena[] = [];
+  ultimasResenas: any[] = [];
   categorias: any[] = [];
   isMobileView: boolean = false;
-  private resizeSubscription!: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -36,33 +35,25 @@ export class PanelComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log('>>> PanelComponent: ngOnInit called');
     this.loadUserInfoFromToken();
     this.loadPanelData();
     this.loadUltimasResenas();
     this.loadCategorias();
     this.loadUserProfile();
     this.checkScreenSize();
-    this.resizeSubscription = this.onResize().subscribe(() => {
-      this.checkScreenSize();
-    });
   }
 
-  ngOnDestroy(): void {
-    if (this.resizeSubscription) {
-      this.resizeSubscription.unsubscribe();
-    }
-  }
-
-  private onResize(): Observable<Event> {
-    return new Observable((observer) => {
-      const handler = (event: Event) => observer.next(event);
-      window.addEventListener('resize', handler);
-      return () => window.removeEventListener('resize', handler);
-    });
+  @HostListener('window:resize')
+  onResize(): void {
+    this.checkScreenSize();
   }
 
   private checkScreenSize(): void {
-    this.isMobileView = window.innerWidth < 560;
+    const isMobile = window.innerWidth < 560;
+    if (this.isMobileView !== isMobile) {
+      this.isMobileView = isMobile;
+    }
   }
 
   loadUserInfoFromToken(): void {
@@ -81,18 +72,21 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   loadUserProfile(): void {
+    console.log('📊 [PANEL] Cargando perfil de usuario desde PerfilService...');
     this.perfilService.getProfile().subscribe({
       next: (profile: UsuarioDTO) => {
+        console.log('✅ [PANEL] Perfil de usuario recibido:', profile);
         this.userInfo = { ...this.userInfo, ...profile };
       },
       error: (error: any) => {
-        console.error('Error loading user profile:', error);
+        console.error('❌ [PANEL] Error loading user profile:', error);
       },
     });
   }
 
   loadPanelData(): void {
     const token = this.authService.getToken();
+    console.log('📊 [PANEL] loadPanelData() ejecutado. Token presente:', !!token);
     if (token) {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
@@ -100,30 +94,39 @@ export class PanelComponent implements OnInit, OnDestroy {
 
       this.http.get(`${environment.apiUrl}/admin/dashboard`, { headers }).subscribe({
         next: (data: any) => {
+          console.log('✅ [PANEL] Datos del dashboard recibidos:', data);
           this.panelData = data;
         },
         error: (error: any) => {
-          console.error('Error loading panel data:', error);
+          console.error('❌ [PANEL] Error loading panel data:', error);
         },
       });
     }
   }
 
   loadUltimasResenas(): void {
+    console.log('📊 [PANEL] loadUltimasResenas() ejecutado...');
     this.resenaService.getResenas().subscribe({
       next: (resenas: Resena[]) => {
-        this.ultimasResenas = resenas
+        console.log('✅ [PANEL] Reseñas recibidas:', resenas?.length);
+        this.ultimasResenas = (resenas || [])
           .sort((a, b) => new Date(b.fechaResena).getTime() - new Date(a.fechaResena).getTime())
-          .slice(0, 5);
+          .slice(0, 5)
+          .map((r) => ({
+            ...r,
+            barHeight: (r.calificacion || 0) * 34,
+            barColor: this.getBarColor(r.calificacion),
+          }));
       },
       error: (error: any) => {
-        console.error('Error cargando últimas reseñas:', error);
+        console.error('❌ [PANEL] Error cargando últimas reseñas:', error);
       },
     });
   }
 
   loadCategorias(): void {
     const token = this.authService.getToken();
+    console.log('📊 [PANEL] loadCategorias() ejecutado. Token presente:', !!token);
     if (token) {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${token}`,
@@ -131,10 +134,16 @@ export class PanelComponent implements OnInit, OnDestroy {
 
       this.http.get<any[]>(`${environment.apiUrl}/admin/categoria`, { headers }).subscribe({
         next: (data: any[]) => {
-          this.categorias = data;
+          console.log('✅ [PANEL] Categorías recibidas:', data?.length);
+          const total = data?.length || 0;
+          this.categorias = (data || []).map((cat, i) => ({
+            ...cat,
+            color: this.getCategoriaColor(i),
+            clipPath: this.getPieSliceClip(i, total),
+          }));
         },
         error: (error: any) => {
-          console.error('Error cargando categorías:', error);
+          console.error('❌ [PANEL] Error cargando categorías:', error);
         },
       });
     }

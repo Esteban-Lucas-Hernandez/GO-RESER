@@ -106,16 +106,21 @@ export class SuperAdminComponent implements OnInit {
 
   // Método para obtener la lista de usuarios
   getUsers() {
+    console.log('👥 [SUPERADMIN USERS] Solicitando lista de usuarios a getAllUsers()...');
     this.loading = true;
     this.currentPage = 1; // Reset to first page when fetching new data
     this.superAdminService.getAllUsers().subscribe({
       next: (data: any) => {
-        this.usuarios = data;
-        this.filteredUsers = [...data];
+        console.log('✅ [SUPERADMIN USERS] Usuarios recibidos:', data?.length);
+        this.usuarios = data || [];
+        this.activeUsersCount = this.usuarios.filter((u) => u.estado).length;
+        this.adminUsersCount = this.usuarios.filter((u) => u.roles && u.roles.includes('ROLE_ADMIN')).length;
+        this.filteredUsers = [...this.usuarios];
         this.filterUsers();
         this.loading = false;
       },
       error: (error: any) => {
+        console.error('❌ [SUPERADMIN USERS] Error al obtener usuarios:', error);
         Swal.fire({
           position: 'top-end',
           icon: 'error',
@@ -128,14 +133,8 @@ export class SuperAdminComponent implements OnInit {
     });
   }
 
-  // Get counts for stats cards
-  get activeUsersCount(): number {
-    return this.usuarios.filter((u) => u.estado).length;
-  }
-
-  get adminUsersCount(): number {
-    return this.usuarios.filter((u) => u.roles && u.roles.includes('ROLE_ADMIN')).length;
-  }
+  activeUsersCount: number = 0;
+  adminUsersCount: number = 0;
 
   // Método para cambiar el estado de un usuario
   changeUserStatus(usuario: Usuario) {

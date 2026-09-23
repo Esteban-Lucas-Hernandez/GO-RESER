@@ -445,6 +445,8 @@ INSERT INTO pagos (id_pago, fecha_pago, metodo, monto, referencia_pago, id_reser
 INSERT INTO pagos (id_pago, fecha_pago, metodo, monto, referencia_pago, id_reserva) VALUES (27, '2026-03-26 11:03:35.844115', 'daviplata', 8060000.0, 'REF-1BF2530F', 29);
 INSERT INTO pagos (id_pago, fecha_pago, metodo, monto, referencia_pago, id_reserva) VALUES (28, '2026-03-26 11:05:11.655092', 'nequi', 2720000.0, 'REF-AE0327D6', 30);
 INSERT INTO pagos (id_pago, fecha_pago, metodo, monto, referencia_pago, id_reserva) VALUES (29, '2026-05-24 17:30:31.156918', 'nequi', 1750000.0, 'REF-6D2D811C', 31);
+INSERT INTO pagos (id_pago, fecha_pago, metodo, monto, referencia_pago, id_reserva) VALUES (30, '2026-03-25 01:26:25.000000', 'nequi', 360000.0, 'REF-1A2B3C4D', 1);
+INSERT INTO pagos (id_pago, fecha_pago, metodo, monto, referencia_pago, id_reserva) VALUES (31, '2026-03-25 01:40:35.000000', 'nequi', 180000.0, 'REF-2B3C4D5E', 2);
 
 SET REFERENTIAL_INTEGRITY TRUE;
 
@@ -459,4 +461,4 @@ ALTER TABLE public.habitaciones ALTER COLUMN id_habitacion RESTART WITH 49;
 ALTER TABLE public.imagenes_habitacion ALTER COLUMN id_imagen RESTART WITH 147;
 ALTER TABLE public.resenas ALTER COLUMN id_resena RESTART WITH 9;
 ALTER TABLE public.reservas ALTER COLUMN id_reserva RESTART WITH 32;
-ALTER TABLE public.pagos ALTER COLUMN id_pago RESTART WITH 30;
+ALTER TABLE public.pagos ALTER COLUMN id_pago RESTART WITH 32;

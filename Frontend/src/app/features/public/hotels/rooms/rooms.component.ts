@@ -639,4 +639,23 @@ export class HabitacionesComponent implements OnInit, AfterViewInit {
     this.currentPage = 1;
     this.updatePaginatedRooms();
   }
+
+  // Control de estado de carga de imágenes
+  imagenesCargadas: { [url: string]: boolean } = {};
+
+  onImagenCargada(url: string | null | undefined): void {
+    if (url) {
+      this.imagenesCargadas[url] = true;
+    }
+  }
+
+  esImagenCargada(url: string | null | undefined): boolean {
+    return url ? !!this.imagenesCargadas[url] : false;
+  }
+
+  onImagenError(url: string | null | undefined): void {
+    if (url) {
+      this.imagenesCargadas[url] = true;
+    }
+  }
 }

@@ -295,12 +295,26 @@ export class HotelesCarruselComponent implements OnInit, OnDestroy, AfterViewIni
 
   // Método para obtener el nombre de la ciudad
   getCiudadNombre(hotel: Hotel): string {
-    return hotel.ciudad?.nombre || 'No especificado';
+    return hotel.ciudad?.nombre || '';
   }
 
   // Método para obtener el nombre del departamento
   getDepartamentoNombre(hotel: Hotel): string {
-    return hotel.ciudad?.departamento?.nombre || 'No especificado';
+    return (
+      hotel.ciudad?.departamentoNombre ||
+      hotel.ciudad?.departamento?.nombre ||
+      ''
+    );
+  }
+
+  // Método para obtener la ubicación formateada completa
+  getLocationText(hotel: Hotel): string {
+    const ciudad = this.getCiudadNombre(hotel);
+    const depto = this.getDepartamentoNombre(hotel);
+    if (ciudad && depto) {
+      return `${ciudad}, ${depto}`;
+    }
+    return ciudad || depto || 'Ubicación no disponible';
   }
 
   // Get the hotels to display (either filtered or all)
